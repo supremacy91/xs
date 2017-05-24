@@ -83,6 +83,27 @@ class Info extends Generic implements TabInterface
         );
 
         $fieldset->addField(
+            'select_type_attributes',
+            'text',
+            [
+                'name'          => 'select_type_attributes',
+                'label'         => __('Attributes Type Select'),
+                'note'       => __('write attribute codes with type "select" using "," as separator, e.g. - "color, size, brand". "color" and "size" are default select attributes')
+            ]
+        );
+
+        $fieldset->addField(
+            'clear_select_attributes',
+            'checkbox',
+            [
+                'name'          => 'clear_select_attributes',
+                'label'         => __('Clear select Attributes'),
+                'checked' => false,
+                'value'  => '1'
+            ]
+        );
+
+        $fieldset->addField(
             'root_category',
             'select',
             [

@@ -52,6 +52,11 @@ class Save extends Action
     protected $_messageManager;
 
     /**
+     * @var \IntechSoft\CustomImport\Model\Url\Rebuilt
+     */
+    private $_rebuiltModel;
+
+    /**
      * Index constructor.
      * @param \Magento\Backend\App\Action\Context $context
      * @param \Magento\Framework\Registry $coreRegistry
@@ -60,6 +65,7 @@ class Save extends Action
      * @param \IntechSoft\CustomImport\Model\Import $importModel
      * @param \Magento\Framework\Filesystem\DirectoryList $directoryList
      * @param \Magento\Framework\Message\ManagerInterface $messageManager
+     * @param \IntechSoft\CustomImport\Model\Url\Rebuilt $rebuiltModel
      */
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
@@ -69,7 +75,8 @@ class Save extends Action
         \IntechSoft\CustomImport\Model\Import $importModel,
         \Magento\Framework\Filesystem\DirectoryList $directoryList,
         \Magento\Indexer\Model\Indexer\CollectionFactory $indexerCollectionFactory,
-        \Magento\Framework\Message\ManagerInterface $messageManager
+        \Magento\Framework\Message\ManagerInterface $messageManager,
+        \IntechSoft\CustomImport\Model\Url\Rebuilt $rebuiltModel
     ) {
         parent::__construct($context);
         $this->uploader = $uploader;
@@ -78,6 +85,7 @@ class Save extends Action
         $this->directoryList = $directoryList;
         $this->indexerCollectionFactory = $indexerCollectionFactory;
         $this->_messageManager = $messageManager;
+        $this->_rebuiltModel = $rebuiltModel;
     }
 
     /**
@@ -91,7 +99,7 @@ class Save extends Action
         $importSettings = array();
         $importParams = $this->getRequest()->getParam('import');
         foreach ($importParams as $name => $value) {
-            if ($value != '' && $value != 0){
+            if ($value != '' && $value != 0 || $name == 'select_type_attributes'){
                 $importSettings[$name] = $value;
             }
         }
@@ -135,6 +143,9 @@ class Save extends Action
                 }
             }
         }
+
+        $resultMessage = $this->_rebuiltModel->rebuildProductUrlRewrites();
+        $this->_messageManager->addSuccess(__($resultMessage));
 
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         $resultRedirect->setPath('customimport/import/index');

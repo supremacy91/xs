@@ -1,14 +1,15 @@
 <?php
 
 namespace IntechSoft\CustomImport\Model;
-
 use \Magento\Framework\App\Filesystem\DirectoryList;
 use \Magento\ImportExport\Model\Import\Adapter as ImportAdapter;
 use \Magento\Eav\Model\Config;
 
 class Attributes extends \Magento\Catalog\Model\AbstractModel
 {
-    
+
+    const ATTRIBUTE_IMAGE_FOLDER = 'attribute/swatch';
+
     protected $attrOptionCollectionFactory;
     /**
      * @var \Magento\Eav\Model\Entity\Attribute\SetFactory
@@ -23,12 +24,13 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
     /**
      * @var \Magento\Catalog\Helper\Product
      */
-    protected $attributeFactory;
+
+    protected $productHelper;
 
     /**
      * @var \Magento\Catalog\Model\ResourceModel\Eav\AttributeFactory
      */
-    protected $productHelper;
+    protected $attributeFactory;
 
     protected $_entityTypeId;
 
@@ -59,6 +61,26 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
      */
     protected $optionFactory;
 
+    /**
+     * @var \Magento\Swatches\Helper\Media
+     */
+    protected $_swatchHelper;
+
+    /**
+     * @var \Magento\Framework\Filesystem\Directory\WriteInterface
+     */
+    protected $mediaDirectory;
+
+    /**
+     * @var \IntechSoft\CustomImport\Helper\Import
+     */
+    protected $customImportHelper;
+
+    /**
+     * @var \IntechSoft\CustomImport\Helper\Import
+     */
+    protected $_attributeUninstaller;
+
     protected $_collectedAttributes = array();
 
     protected $csvFileData = array();
@@ -67,11 +89,16 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
 
     public $allowToContinueImport = true;
 
+    /**
+     * @var \Magento\Framework\Registry
+     */
     protected $_registry;
 
     protected $attrbuteSettings = array(
         'attribute_set_id' => '4',
-        'attribute_group_code' => 'product-details'
+        'attribute_group_code' => 'product-details',
+        'select_type_attributes' => '',
+        'clear_select_attributes' => ''
     );
 
     /**
@@ -86,6 +113,10 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
      * @param \Magento\Framework\ObjectManagerInterface $objectmanager
      * @param \Magento\Eav\Api\Data\AttributeOptionLabelInterfaceFactory $optionLabelFactory
      * @param \Magento\Eav\Api\Data\AttributeOptionInterfaceFactory $optionFactory
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Swatches\Helper\Media $swatchHelper
+     * @param \Magento\Framework\Filesystem $filesystem
+     * @param \IntechSoft\CustomImport\Helper\Import $customImportHelper
      */
 
     public function __construct(
@@ -100,7 +131,11 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
         \Magento\Framework\ObjectManagerInterface $objectmanager,
         \Magento\Eav\Api\Data\AttributeOptionLabelInterfaceFactory $optionLabelFactory,
         \Magento\Eav\Api\Data\AttributeOptionInterfaceFactory $optionFactory,
-        \Magento\Framework\Registry $registry
+        \Magento\Framework\Registry $registry,
+        \Magento\Swatches\Helper\Media $swatchHelper,
+        \Magento\Framework\Filesystem $filesystem,
+        \IntechSoft\CustomImport\Helper\Import $customImportHelper,
+        \IntechSoft\CustomImport\Model\Attribute\Uninstall $attributeUninstaller
     )
     {
         $this->attrOptionCollectionFactory = $attrOptionCollectionFactory;
@@ -115,6 +150,10 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
         $this->optionFactory = $optionFactory;
         $this->objectManager = $objectmanager;
         $this->_registry = $registry;
+        $this->_swatchHelper = $swatchHelper;
+        $this->mediaDirectory = $filesystem->getDirectoryWrite(DirectoryList::MEDIA);
+        $this->customImportHelper = $customImportHelper;
+        $this->_attributeUninstaller = $attributeUninstaller;
 
         $this->_entityTypeId = $this->objectManager->create(
             'Magento\Eav\Model\Entity'
@@ -130,6 +169,7 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
     {
         $this->setCsvFile($csvFile);
         $this->setCsvFileData();
+        $this->setSelectAttributes();
         $this->collectAttributes();
         $this->collectAttributeOptions();
         $this->addNewAttributes();
@@ -148,20 +188,41 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
     {
         if (is_array($settings) && count($settings) > 0) {
             foreach ($settings as $name => $value) {
-                if (isset($this->attrbuteSettings[$name]) && $value != ''){
+                if (isset($this->attrbuteSettings[$name]) && $value != '') {
                     $this->attrbuteSettings[$name] = $value;
                 }
             }
         }
-
     }
 
+    protected function setSelectAttributes()
+    {
+        if ($this->attrbuteSettings['select_type_attributes'] != '') {
+            $selectAttributesArray = explode(',', $this->attrbuteSettings['select_type_attributes']);
+            foreach ($selectAttributesArray as $attribute) {
+                $attribute = trim($attribute);
+                if (isset($this->customImportHelper->attributesMapping[$attribute])){
+                    $attribute = $this->customImportHelper->attributesMapping[$attribute];
+                } elseif (isset($this->customImportHelper->attributesMapping[ucfirst($attribute)])) {
+                    $attribute = $this->customImportHelper->attributesMapping[ucfirst($attribute)];
+                }
+                if (!in_array($attribute, $this->_selectAttributes)) {
+                    $this->_selectAttributes[] = $attribute;
+                }
+            }
+        }
+    }
+
+
     /**
+     * @param $attributeCode
+     * @param $type - attributeType
      * create attributes
      * @return $this
      */
     public function createAttributesAndOptions($attributeCode, $type)
     {
+
         $attribute = $this->createAttribute($attributeCode, $type);
 
         if ($attribute &&  $attributeCode != 'configurable_variations' && $attributeCode != 'additional_images' && $attributeCode != 'color_hex') {
@@ -192,7 +253,15 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
             $attributeCode = array_keys($attributeCode)[0];
         }
         $attribute = $this->attributeFactory->create();
+
         $attribute->loadByCode(\Magento\Catalog\Model\Product::ENTITY, $attributeCode);
+
+        // todo: find out about possibility delete "color" and "size" attributes
+
+        if (isset($this->attrbuteSettings['clear_select_attributes']) && $this->attrbuteSettings['clear_select_attributes'] && $type == 'select') {
+            $this->_attributeUninstaller->uninstallAttribute($attribute->getAttributeId());
+        }
+
         $swatchInputType = 'select';
         if (in_array($attributeCode, $this->_selectAttributes)){
             if($attributeCode == 'color') {
@@ -201,7 +270,7 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
                 $swatchInputType = 'swatch_text';
             }
         }
-        if (is_null($attribute->getId()) && $attributeCode != 'qty') {
+        if (is_null($attribute->getId()) && $attributeCode != 'qty' && $attributeCode != 'additional_images') {
             $attribute->addData([
                 'entity_type_id'    => $this->_entityTypeId,
                 'attribute_code'    => $attributeCode,
@@ -412,7 +481,14 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
                     if (substr($optionValue, 0, 1) == '#' && strlen($optionValue) == 7) {
                         $optionSwatch['value'][$optionKey] = $optionValue;
                     } else if (array_key_exists($optionValue, $colorMap)) {
-                        $optionSwatch['value'][$optionKey] = $colorMap[$optionValue];
+                        if (strpos($colorMap[$optionValue], "#") !== false){
+                            $optionSwatch['value'][$optionKey] = $colorMap[$optionValue];
+                        } else {
+                            $image = $colorMap[$optionValue];
+                            $this->generateSwatchVariations($image);
+                            $optionSwatch['value'][$optionKey] = "/" . $image;
+                        }
+
                     } else {
                         $optionSwatch['value'][$optionKey] = '#ffffff';
                     }
@@ -435,6 +511,20 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
             $optionSwatch['value'][$optionKey] = [$optionValue, ''];
         }
         return $optionSwatch;
+    }
+
+    protected function generateSwatchVariations($image)
+    {
+        $absoluteImagePath = $this->mediaDirectory->getAbsolutePath($this->getAttributeSwatchPath($image));
+        if (file_exists($absoluteImagePath)) {
+            $this->_swatchHelper->generateSwatchVariations($image);
+        }
+
+    }
+
+    public function getAttributeSwatchPath($image)
+    {
+        return self::ATTRIBUTE_IMAGE_FOLDER . '/' . $image;
     }
 
     /**

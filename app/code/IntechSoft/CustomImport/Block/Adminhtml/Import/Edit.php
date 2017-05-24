@@ -63,6 +63,15 @@ class Edit extends Container
             ],
             -100
         );
+        $this->buttonList->add(
+            'rebuild',
+            [
+                'label' => __('Rebuild url rewrites'),
+                'onclick' => "setLocation('{$this->getUrl('*/*/rebuild')}')",
+                'class' => 'Rebuild'
+            ],
+            -100
+        );
 
         $this->buttonList->update('delete', 'label', __('Delete'));
     }

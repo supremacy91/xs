@@ -35,9 +35,10 @@ class Import extends \Magento\Framework\App\Helper\AbstractHelper
         'small_image' => '',
         'thumbnail_image' => '',
         'configurable_variations' => '',
+        'default_category' => ''
     );
 
-    protected $attributesMapping = array(
+    public $attributesMapping = array(
         'SKU' => 'sku',
         'Short Description' => 'short_description',
         'Description' => 'description',
@@ -165,6 +166,7 @@ class Import extends \Magento\Framework\App\Helper\AbstractHelper
         }
         $convertedData = $this->checkNameAttribute($convertedData);
         $convertedData = $this->checkUrlKeyAttribute($convertedData);
+        $convertedData = $this->addDefaultCategory($convertedData);
 
         return $convertedData;
     }
@@ -310,6 +312,33 @@ class Import extends \Magento\Framework\App\Helper\AbstractHelper
         return $data;
     }
 
+    public function addDefaultCategory($convertedData)
+    {
+        $defaultCategoryColumnIndex = $this->getColumnImdexByName('default_category');
+        $categoriesColumnIndex = $this->getColumnImdexByName('categories');
+
+        for($i = 1; $i < count($convertedData); $i++)
+        {
+            $defaultCategory = $this->getFirstProductCategory($convertedData[$i][$categoriesColumnIndex]);
+            $convertedData[$i][$defaultCategoryColumnIndex] = $defaultCategory;
+        }
+        return $convertedData;
+    }
+
+    public function getFirstProductCategory($categories)
+    {
+        if (strpos($categories, ',') === false ){
+            $defaultCategoryPath = $categories;
+        } else {
+            $categories = explode(',', $categories);
+            $defaultCategoryPath =  $categories[0];
+        }
+        $categoryArray = explode('/', $defaultCategoryPath);
+        $defaultCategory = end($categoryArray);
+        $defaultCategory = trim($defaultCategory);
+        return $defaultCategory;
+    }
+
     public function getColumnImdexByName($name)
     {
         if ($index = array_keys($this->headers, $name)) {
@@ -362,7 +391,12 @@ class Import extends \Magento\Framework\App\Helper\AbstractHelper
     public function prepareImagePaths($path, $column = false)
     {
         if (in_array($column , $this->imagesColumnArray)){
-            $path = $this->itemImage;
+            if(file_exists($this->directory_list->getPath('media'). '/import' . $this->itemImage)){
+                $path = $this->itemImage;
+            } else {
+                $path = '';
+            }
+
         } elseif (gettype($path) == 'string' && $path != '') {
             $path = str_replace(self::IMAGE_URL_TO_CUT, '',$path);
             if (!preg_match("/^[a-zA-Z\d\/\.\_\-\|]*$/", $path)) {
@@ -441,6 +475,7 @@ class Import extends \Magento\Framework\App\Helper\AbstractHelper
         }
         $convertedData = $this->checkNameAttribute($convertedData);
         $convertedData = $this->checkUrlKeyAttribute($convertedData);
+        $convertedData = $this->addDefaultCategory($convertedData);
 
         return $convertedData;
     }
