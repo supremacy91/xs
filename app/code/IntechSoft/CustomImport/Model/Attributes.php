@@ -225,7 +225,7 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
 
         $attribute = $this->createAttribute($attributeCode, $type);
 
-        if ($attribute &&  $attributeCode != 'configurable_variations' && $attributeCode != 'additional_images' && $attributeCode != 'color_hex') {
+        if ($attribute &&  $attributeCode != 'configurable_variations' && $attributeCode != 'additional_images' && $attributeCode != 'color_hex' && $attributeCode != 'freetext') {
             $attributeSet = $this->_attributeSetFactory->create();
             $attributeSet->setEntityTypeId($this->_entityTypeId)->load('Default');
             $productDetailsGroupe = $this->_groupCollectionFactory->create()
