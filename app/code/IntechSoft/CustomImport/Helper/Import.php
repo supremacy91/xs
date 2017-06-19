@@ -35,7 +35,8 @@ class Import extends \Magento\Framework\App\Helper\AbstractHelper
         'small_image' => '',
         'thumbnail_image' => '',
         'configurable_variations' => '',
-        'default_category' => ''
+        'default_category' => '',
+        'visibility' => 'Not Visible Individually'
     );
 
     public $attributesMapping = array(
@@ -282,6 +283,7 @@ class Import extends \Magento\Framework\App\Helper\AbstractHelper
             }
         }
         if(!$this->_registry->registry('color_data')){
+            $this->_registry->unregister('color_data');
             $this->_registry->register('color_data', $colorData);
         }
         return $data;
@@ -360,6 +362,7 @@ class Import extends \Magento\Framework\App\Helper\AbstractHelper
         $convertedItem = trim($item);
         $convertedItem = $this->encodToEncodUtf8($convertedItem);
         $convertedItem = str_replace(',', '.', $convertedItem);
+        $convertedItem = str_replace('|', ',', $convertedItem);
         if ($column == 'categories') {
             $convertedItem = str_replace(' > ', '/', $convertedItem);
             $convertedItem = $this->rootCategory . '/' . $convertedItem;
@@ -434,6 +437,7 @@ class Import extends \Magento\Framework\App\Helper\AbstractHelper
         $skuKey = array_search('SKU',$this->headers);
         $configurableVariation = '';
         $this->standardAttributes['product_type'] = 'configurable';
+        $this->standardAttributes['visibility'] = 'Catalog| Search';
         $countElements = count($data)-1;
         foreach ($data as $index => $item)
         {
