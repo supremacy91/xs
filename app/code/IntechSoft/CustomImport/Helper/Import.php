@@ -136,7 +136,9 @@ class Import extends \Magento\Framework\App\Helper\AbstractHelper
         $standardHeaders = array_keys($this->getStandardAttributes());
         for($i = 0; $i < count($standardHeaders); $i++)
         {
-            array_push($preparedHeaders, $standardHeaders[$i]);
+            if(!in_array($standardHeaders[$i], $preparedHeaders)){
+                array_push($preparedHeaders, $standardHeaders[$i]);
+            }
         }
         return $preparedHeaders;
     }
@@ -295,17 +297,24 @@ class Import extends \Magento\Framework\App\Helper\AbstractHelper
         $model->formatUrlKey('test');
         $typeKey = array_search('product_type',$this->headers);
         $data = array();
+        $urlKey = false;
             for($i = 0; $i < count($convertedData); $i++)
             {
                 if ($i == 0) {
                     $data[$i] = $convertedData[$i];
-                    array_push($data[$i] , 'url_key');
+                    if(!in_array('url_key', $data[$i])){
+                        $urlKey = true;
+                        array_push($data[$i] , 'url_key');
+                    }
+
                 } else {
                     $data[$i] = $convertedData[$i];
-                    if($convertedData[$i][$typeKey] == 'simple'){
-                        array_push($data[$i], $model->formatUrlKey($convertedData[$i][$this->getColumnImdexByName('brand')]. '-' . $convertedData[$i][$this->getColumnImdexByName('sku')]));
-                    }else{
-                        array_push($data[$i], $model->formatUrlKey($convertedData[$i][$this->getColumnImdexByName('brand')]. '-' . $convertedData[$i][$this->getColumnImdexByName('group')]));
+                    if($urlKey){
+                        if($convertedData[$i][$typeKey] == 'simple'){
+                            array_push($data[$i], $model->formatUrlKey($convertedData[$i][$this->getColumnImdexByName('brand')]. '-' . $convertedData[$i][$this->getColumnImdexByName('sku')]));
+                        }else{
+                            array_push($data[$i], $model->formatUrlKey($convertedData[$i][$this->getColumnImdexByName('brand')]. '-' . $convertedData[$i][$this->getColumnImdexByName('group')]));
+                        }
                     }
 
                 }

@@ -108,7 +108,7 @@ class Hour
                 $this->_logger->info(self::SUCCESS_MESSAGE . $file);
                 unlink($importDir. '/' .$file);
             } else {
-                foreach ($this->importModel->errors as $error) {
+                foreach ($this->_importModel->errors as $error) {
                     if (is_array($error)) {
                         $error = implode(' - ', $error);
                     }
