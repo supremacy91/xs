@@ -117,11 +117,12 @@ class Hour
                 }
 
             }
-            $this->_logger->info('hourly cron finished at - ' . $this->_date->gmtDate('Y-m-d H:i:s'));
+
             if($i <= 1){
                 break;
             }
         }
+        $this->_logger->info('hourly cron finished at - ' . $this->_date->gmtDate('Y-m-d H:i:s'));
 
     }
 }
