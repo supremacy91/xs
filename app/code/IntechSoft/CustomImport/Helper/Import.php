@@ -145,6 +145,7 @@ class Import extends \Magento\Framework\App\Helper\AbstractHelper
 
     public function getConvertedData($data)
     {
+        $this->standardAttributes['product_type'] = 'simple';
         $convertedData = array();
         $counter = 0;
         foreach ($data as $index => $item)
@@ -315,6 +316,8 @@ class Import extends \Magento\Framework\App\Helper\AbstractHelper
                         }else{
                             array_push($data[$i], $model->formatUrlKey($convertedData[$i][$this->getColumnImdexByName('brand')]. '-' . $convertedData[$i][$this->getColumnImdexByName('group')]));
                         }
+                    }elseif($convertedData[$i][$typeKey] != 'simple'){
+                        array_push($data[$i], $model->formatUrlKey($convertedData[$i][$this->getColumnImdexByName('brand')]. '-' . $convertedData[$i][$this->getColumnImdexByName('group')]));
                     }
 
                 }

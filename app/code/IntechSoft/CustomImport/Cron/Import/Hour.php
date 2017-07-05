@@ -92,12 +92,13 @@ class Hour
         $fileList = scandir($importDir);
 
         $this->_logger->info(print_r($fileList, true));
-
+        $i = 0;
         foreach ($fileList as $file) {
 
             if ($file == '.' || $file == '..'){
                 continue;
             }
+            $i++;
             $importedFileName = $importDir . '/' . $file;
 
             $this->_logger->info('$importedFileName - '.$importedFileName);
@@ -117,6 +118,9 @@ class Hour
 
             }
             $this->_logger->info('hourly cron finished at - ' . $this->_date->gmtDate('Y-m-d H:i:s'));
+            if($i <= 1){
+                break;
+            }
         }
 
     }

@@ -336,6 +336,7 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
      */
     protected function collectAttributes()
     {
+        $this->_collectedAttributes = array();
         foreach ($this->csvFileData[0] as $attributeCode) {
             $this->_collectedAttributes[] = $attributeCode;
         }
