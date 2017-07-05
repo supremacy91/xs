@@ -85,7 +85,7 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
 
     protected $csvFileData = array();
 
-    protected $_selectAttributes = array('color', 'size');
+    protected $_selectAttributes = array('color', 'size', 'brand');
 
     public $allowToContinueImport = true;
 
