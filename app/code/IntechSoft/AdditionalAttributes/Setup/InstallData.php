@@ -30,7 +30,9 @@ class InstallData implements InstallDataInterface
      *
      * @param EavSetupFactory $eavSetupFactory
      */
-    public function __construct(EavSetupFactory $eavSetupFactory)
+    public function __construct(
+        EavSetupFactory $eavSetupFactory
+    )
     {
         $this->eavSetupFactory = $eavSetupFactory;
     }
@@ -75,5 +77,6 @@ class InstallData implements InstallDataInterface
                 'used_for_sort_by' => 1
             ]
         );
+
     }
 }
