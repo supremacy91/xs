@@ -27,7 +27,7 @@ class AfterProductSaveObserver implements ObserverInterface
     /**
      * @var \Magento\Framework\Message\ManagerInterface
      */
-    protected $messageManager;
+    //protected $messageManager;
     protected $_request;
 
     /**
@@ -48,12 +48,11 @@ class AfterProductSaveObserver implements ObserverInterface
         \Psr\Log\LoggerInterface $loggerInterface,
         \Magento\Backend\Helper\Js $jsHelper,
         \Magento\Framework\App\RequestInterface $request,
-        \Magento\Framework\Message\ManagerInterface $messageManager,
         \Magento\Catalog\Model\ProductFactory $productFactory
     ) {
         $this->_logger = $loggerInterface;
         $this->_jsHelper = $jsHelper;
-        $this->messageManager = $messageManager;
+        //$this->messageManager = $messageManager;
         $this->_request = $request;
         $this->productFactory = $productFactory;
     }
@@ -77,13 +76,13 @@ class AfterProductSaveObserver implements ObserverInterface
             }
 
             if($productSpecialPriceFinishDate == null && $productSpecialPriceStartDate == null){
-                $observer->getProduct()->setData('sorting_new_sale',0);
+                $observer->getProduct()->setData('sorting_new_sale', 2140000000);
             } else if($productSpecialPriceFinishDate == null && $currentTime>$startTime){
-                $observer->getProduct()->setData('sorting_new_sale',0);
+                $observer->getProduct()->setData('sorting_new_sale', 2140000000);
             } else if($productSpecialPriceStartDate == null && $currentTime<$finishTime){
-                $observer->getProduct()->setData('sorting_new_sale',0);
+                $observer->getProduct()->setData('sorting_new_sale', 2140000000);
             } else if($finishTime>$currentTime && $currentTime>$startTime){
-                $observer->getProduct()->setData('sorting_new_sale',0);
+                $observer->getProduct()->setData('sorting_new_sale', 2140000000);
             } else {
                 $createDateParam = $this->dateToSeconds($observerProduct->getData('created_at'));
                 $observer->getProduct()->setData('sorting_new_sale', $createDateParam);
