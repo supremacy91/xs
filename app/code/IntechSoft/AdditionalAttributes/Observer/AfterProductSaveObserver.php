@@ -84,12 +84,12 @@ class AfterProductSaveObserver implements ObserverInterface
             } else if($finishTime>$currentTime && $currentTime>$startTime){
                 $observer->getProduct()->setData('sorting_new_sale', 2140000000);
             } else {
-                $createDateParam = $this->dateToSeconds($observerProduct->getData('created_at'));
+                $createDateParam = 2140000000 - $this->dateToSeconds($observerProduct->getData('created_at'));
                 $observer->getProduct()->setData('sorting_new_sale', $createDateParam);
             }
 
         } else {
-            $createDateParam = $this->dateToSeconds($observerProduct->getData('created_at'));
+            $createDateParam = 2140000000 - $this->dateToSeconds($observerProduct->getData('created_at'));
             $observer->getProduct()->setData('sorting_new_sale', $createDateParam);
         }
     }
