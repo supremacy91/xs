@@ -13,6 +13,7 @@ namespace IntechSoft\AdditionalAttributes\Cron;
 class Data
 {
     const XML_PATH_REINDEX_TYPE = 'intechsoft/basic/enabled';
+    const MAXTIMEVALUE = 2140000000;
     protected $_scopeConfig;
     protected $_logger;
 
@@ -78,21 +79,21 @@ class Data
                 if($productSpecialPriceStartDate!=null){
                     $startTime = $this->dateToSeconds($productSpecialPriceStartDate);
                 }
-                $paramForSave = 2140000000;
+                $paramForSave = self::MAXTIMEVALUE;
                 if($productSpecialPriceFinishDate == null && $productSpecialPriceStartDate == null){
-                    $paramForSave = 2140000000;
+                    $paramForSave = self::MAXTIMEVALUE;
                 } else if($productSpecialPriceFinishDate == null && $currentTime>$startTime){
-                    $paramForSave = 2140000000;
+                    $paramForSave = self::MAXTIMEVALUE;
                 } else if($productSpecialPriceStartDate == null && $currentTime<$finishTime){
-                    $paramForSave = 2140000000;
+                    $paramForSave = self::MAXTIMEVALUE;
                 } else if($finishTime>$currentTime && $currentTime>$startTime){
-                    $paramForSave = 2140000000;
+                    $paramForSave = self::MAXTIMEVALUE;
                 } else {
-                    $paramForSave = 2140000000-$this->dateToSeconds($productForSave->getData('created_at'));
+                    $paramForSave = self::MAXTIMEVALUE-$this->dateToSeconds($productForSave->getData('created_at'));
                 }
 
             } else {
-                $paramForSave = 2140000000-$this->dateToSeconds($productForSave->getData('created_at'));
+                $paramForSave = self::MAXTIMEVALUE-$this->dateToSeconds($productForSave->getData('created_at'));
             }
             echo $productId.'_';
             $productForSaveOne = '';
