@@ -14,6 +14,9 @@ use Magento\Catalog\Model\Product as ModelProduct;
 
 class AfterProductSaveObserver implements ObserverInterface
 {
+
+    const MAXTIMEVALUE = 2140000000;
+
     /**
      * @var \Psr\Log\LoggerInterface
      */
@@ -76,20 +79,20 @@ class AfterProductSaveObserver implements ObserverInterface
             }
 
             if($productSpecialPriceFinishDate == null && $productSpecialPriceStartDate == null){
-                $observer->getProduct()->setData('sorting_new_sale', 2140000000);
+                $observer->getProduct()->setData('sorting_new_sale', self::MAXTIMEVALUE);
             } else if($productSpecialPriceFinishDate == null && $currentTime>$startTime){
-                $observer->getProduct()->setData('sorting_new_sale', 2140000000);
+                $observer->getProduct()->setData('sorting_new_sale', self::MAXTIMEVALUE);
             } else if($productSpecialPriceStartDate == null && $currentTime<$finishTime){
-                $observer->getProduct()->setData('sorting_new_sale', 2140000000);
+                $observer->getProduct()->setData('sorting_new_sale', self::MAXTIMEVALUE);
             } else if($finishTime>$currentTime && $currentTime>$startTime){
-                $observer->getProduct()->setData('sorting_new_sale', 2140000000);
+                $observer->getProduct()->setData('sorting_new_sale', self::MAXTIMEVALUE);
             } else {
-                $createDateParam = 2140000000 - $this->dateToSeconds($observerProduct->getData('created_at'));
+                $createDateParam = self::MAXTIMEVALUE - $this->dateToSeconds($observerProduct->getData('created_at'));
                 $observer->getProduct()->setData('sorting_new_sale', $createDateParam);
             }
 
         } else {
-            $createDateParam = 2140000000 - $this->dateToSeconds($observerProduct->getData('created_at'));
+            $createDateParam = self::MAXTIMEVALUE - $this->dateToSeconds($observerProduct->getData('created_at'));
             $observer->getProduct()->setData('sorting_new_sale', $createDateParam);
         }
     }
