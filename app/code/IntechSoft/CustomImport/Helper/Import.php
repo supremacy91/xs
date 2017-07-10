@@ -36,7 +36,7 @@ class Import extends \Magento\Framework\App\Helper\AbstractHelper
         'thumbnail_image' => '',
         'configurable_variations' => '',
         'default_category' => '',
-        'visibility' => 'Not Visible Individually'
+        'visibility' => 'niet individueel zichtbaar'
     );
 
     public $attributesMapping = array(
@@ -136,13 +136,16 @@ class Import extends \Magento\Framework\App\Helper\AbstractHelper
         $standardHeaders = array_keys($this->getStandardAttributes());
         for($i = 0; $i < count($standardHeaders); $i++)
         {
-            array_push($preparedHeaders, $standardHeaders[$i]);
+            if(!in_array($standardHeaders[$i], $preparedHeaders)){
+                array_push($preparedHeaders, $standardHeaders[$i]);
+            }
         }
         return $preparedHeaders;
     }
 
     public function getConvertedData($data)
     {
+        $this->standardAttributes['product_type'] = 'simple';
         $convertedData = array();
         $counter = 0;
         foreach ($data as $index => $item)
@@ -295,16 +298,25 @@ class Import extends \Magento\Framework\App\Helper\AbstractHelper
         $model->formatUrlKey('test');
         $typeKey = array_search('product_type',$this->headers);
         $data = array();
+        $urlKey = false;
             for($i = 0; $i < count($convertedData); $i++)
             {
                 if ($i == 0) {
                     $data[$i] = $convertedData[$i];
-                    array_push($data[$i] , 'url_key');
+                    if(!in_array('url_key', $data[$i])){
+                        $urlKey = true;
+                        array_push($data[$i] , 'url_key');
+                    }
+
                 } else {
                     $data[$i] = $convertedData[$i];
-                    if($convertedData[$i][$typeKey] == 'simple'){
-                        array_push($data[$i], $model->formatUrlKey($convertedData[$i][$this->getColumnImdexByName('brand')]. '-' . $convertedData[$i][$this->getColumnImdexByName('sku')]));
-                    }else{
+                    if($urlKey){
+                        if($convertedData[$i][$typeKey] == 'simple'){
+                            array_push($data[$i], $model->formatUrlKey($convertedData[$i][$this->getColumnImdexByName('brand')]. '-' . $convertedData[$i][$this->getColumnImdexByName('sku')]));
+                        }else{
+                            array_push($data[$i], $model->formatUrlKey($convertedData[$i][$this->getColumnImdexByName('brand')]. '-' . $convertedData[$i][$this->getColumnImdexByName('group')]));
+                        }
+                    }elseif($convertedData[$i][$typeKey] != 'simple'){
                         array_push($data[$i], $model->formatUrlKey($convertedData[$i][$this->getColumnImdexByName('brand')]. '-' . $convertedData[$i][$this->getColumnImdexByName('group')]));
                     }
 
@@ -437,7 +449,7 @@ class Import extends \Magento\Framework\App\Helper\AbstractHelper
         $skuKey = array_search('SKU',$this->headers);
         $configurableVariation = '';
         $this->standardAttributes['product_type'] = 'configurable';
-        $this->standardAttributes['visibility'] = 'Catalog| Search';
+        $this->standardAttributes['visibility'] = 'catalogus| zoeken';
         $countElements = count($data)-1;
         foreach ($data as $index => $item)
         {
