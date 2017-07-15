@@ -75,6 +75,7 @@ class Import extends \Magento\Framework\App\Helper\AbstractHelper
     protected $headers;
 
     protected $itemImage;
+    protected $_resources;
 
     /**
      * @var \Magento\Eav\Model\Entity\Attribute\SetFactory
@@ -295,7 +296,7 @@ class Import extends \Magento\Framework\App\Helper\AbstractHelper
     public function checkUrlKeyAttribute($convertedData)
     {
         $model = $this->objectManager->create('Magento\Catalog\Model\Product');
-        $model->formatUrlKey('test');
+
         $typeKey = array_search('product_type',$this->headers);
         $data = array();
         $urlKey = false;
@@ -312,12 +313,74 @@ class Import extends \Magento\Framework\App\Helper\AbstractHelper
                     $data[$i] = $convertedData[$i];
                     if($urlKey){
                         if($convertedData[$i][$typeKey] == 'simple'){
-                            array_push($data[$i], $model->formatUrlKey($convertedData[$i][$this->getColumnImdexByName('brand')]. '-' . $convertedData[$i][$this->getColumnImdexByName('sku')]));
+
+                            $this->_resources = \Magento\Framework\App\ObjectManager::getInstance()
+                                ->get('Magento\Framework\App\ResourceConnection');
+                            $connection= $this->_resources->getConnection();
+                            $urlKey = array();
+                            $urlKey[$model->formatUrlKey($convertedData[$i][$this->getColumnImdexByName('brand')]. '-' . $convertedData[$i][$this->getColumnImdexByName('sku')]).'.html'] = $convertedData[$i][$this->getColumnImdexByName('sku')];
+                            $urlKeyDuplicates = $connection->fetchAssoc(
+                                $connection->select()->from(
+                                    ['url_rewrite' => $connection->getTableName('url_rewrite')],
+                                    ['request_path', 'store_id']
+                                )->joinLeft(
+                                    ['cpe' => $connection->getTableName('catalog_product_entity')],
+                                    "cpe.entity_id = url_rewrite.entity_id"
+                                )->where('request_path IN (?)', array_keys($urlKey))
+                                    ->where('cpe.sku not in (?)', array_values($urlKey))
+                            );
+                            $urlKey= $model->formatUrlKey($convertedData[$i][$this->getColumnImdexByName('brand')]. '-' . $convertedData[$i][$this->getColumnImdexByName('sku')]);
+                            if($urlKeyDuplicates){
+                                array_push($data[$i], '');
+                            }else{
+                                array_push($data[$i], $urlKey);
+                            }
                         }else{
-                            array_push($data[$i], $model->formatUrlKey($convertedData[$i][$this->getColumnImdexByName('brand')]. '-' . $convertedData[$i][$this->getColumnImdexByName('group')]));
+
+                            $this->_resources = \Magento\Framework\App\ObjectManager::getInstance()
+                                ->get('Magento\Framework\App\ResourceConnection');
+                            $connection= $this->_resources->getConnection();
+                            $urlKey = array();
+                            $urlKey[$model->formatUrlKey($convertedData[$i][$this->getColumnImdexByName('brand')]. '-' . $convertedData[$i][$this->getColumnImdexByName('group')]).'.html'] = $convertedData[$i][$this->getColumnImdexByName('sku')];
+                            $urlKeyDuplicates = $connection->fetchAssoc(
+                                $connection->select()->from(
+                                    ['url_rewrite' => $connection->getTableName('url_rewrite')],
+                                    ['request_path', 'store_id']
+                                )->joinLeft(
+                                    ['cpe' => $connection->getTableName('catalog_product_entity')],
+                                    "cpe.entity_id = url_rewrite.entity_id"
+                                )->where('request_path IN (?)', array_keys($urlKey))
+                                    ->where('cpe.sku not in (?)', array_values($urlKey))
+                            );
+                            $urlKey = $model->formatUrlKey($convertedData[$i][$this->getColumnImdexByName('brand')]. '-' . $convertedData[$i][$this->getColumnImdexByName('group')]);
+                            if($urlKeyDuplicates){
+                                array_push($data[$i], '');
+                            }else{
+                                array_push($data[$i], $urlKey);
+                            }
                         }
                     }elseif($convertedData[$i][$typeKey] != 'simple'){
-                        array_push($data[$i], $model->formatUrlKey($convertedData[$i][$this->getColumnImdexByName('brand')]. '-' . $convertedData[$i][$this->getColumnImdexByName('group')]));
+                        $this->_resources = \Magento\Framework\App\ObjectManager::getInstance()
+                            ->get('Magento\Framework\App\ResourceConnection');
+                        $connection= $this->_resources->getConnection();
+                        $urlKey = array();
+                        $urlKey[$model->formatUrlKey($convertedData[$i][$this->getColumnImdexByName('brand')]. '-' . $convertedData[$i][$this->getColumnImdexByName('group')]).'.html'] = $convertedData[$i][$this->getColumnImdexByName('sku')];
+                        $urlKeyDuplicates = $connection->fetchAssoc(
+                            $connection->select()->from(
+                                ['url_rewrite' => $connection->getTableName('url_rewrite')],
+                                ['request_path', 'store_id']
+                            )->joinLeft(
+                                ['cpe' => $connection->getTableName('catalog_product_entity')],
+                                "cpe.entity_id = url_rewrite.entity_id"
+                            )->where('request_path IN (?)', array_keys($urlKey))
+                                ->where('cpe.sku not in (?)', array_values($urlKey))
+                        );
+                        $urlKey = $model->formatUrlKey($convertedData[$i][$this->getColumnImdexByName('brand')]. '-' . $convertedData[$i][$this->getColumnImdexByName('group')]);
+                        if($urlKeyDuplicates){
+                            array_push($data[$i], '');
+                        }else{
+                            array_push($data[$i], $urlKey);
+                        }
                     }
 
                 }
