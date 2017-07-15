@@ -67,8 +67,6 @@ class Hour
         $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/test.log');
         $this->_logger = new \Zend\Log\Logger();
         $this->_logger->addWriter($writer);
-
-        $this->_logger->info('construct');
     }
 
     /**
@@ -83,7 +81,7 @@ class Hour
         $importDir = $this->_directoryList->getPath(DirectoryList::VAR_DIR) . '/' . self::CUSTOM_IMPORT_FOLDER ;
 
         $this->_logger->info('$importDir - '.$importDir);
-        $this->_logger->info(is_dir($importDir));
+//        $this->_logger->info(is_dir($importDir));
 
         if(!is_dir($importDir)) {
             mkdir($importDir, 0775);
@@ -99,6 +97,7 @@ class Hour
                 continue;
             }
             $i++;
+            $this->_logger->info(print_r($file, true));
             $importedFileName = $importDir . '/' . $file;
 
             $this->_logger->info('$importedFileName - '.$importedFileName);
