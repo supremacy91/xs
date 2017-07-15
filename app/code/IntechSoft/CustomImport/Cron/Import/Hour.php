@@ -89,7 +89,6 @@ class Hour
 
         $fileList = scandir($importDir);
 
-        $this->_logger->info(print_r($fileList, true));
         $i = 0;
         foreach ($fileList as $file) {
 
@@ -97,7 +96,7 @@ class Hour
                 continue;
             }
             $i++;
-            $this->_logger->info(print_r($file, true));
+           // $this->_logger->info(print_r($file, true));
             $importedFileName = $importDir . '/' . $file;
 
             $this->_logger->info('$importedFileName - '.$importedFileName);
