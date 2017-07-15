@@ -36,7 +36,7 @@ class Import extends \Magento\Framework\App\Helper\AbstractHelper
         'thumbnail_image' => '',
         'configurable_variations' => '',
         'default_category' => '',
-        'visibility' => 'niet individueel zichtbaar'
+        'visibility' => 'Not Visible Individually'
     );
 
     public $attributesMapping = array(
@@ -512,7 +512,7 @@ class Import extends \Magento\Framework\App\Helper\AbstractHelper
         $skuKey = array_search('SKU',$this->headers);
         $configurableVariation = '';
         $this->standardAttributes['product_type'] = 'configurable';
-        $this->standardAttributes['visibility'] = 'catalogus| zoeken';
+        $this->standardAttributes['visibility'] = 'Catalog| Search';
         $countElements = count($data)-1;
         foreach ($data as $index => $item)
         {
