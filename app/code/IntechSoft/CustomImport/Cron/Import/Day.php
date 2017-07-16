@@ -4,8 +4,6 @@ use \Magento\Framework\App\Filesystem\DirectoryList;
 
 class Day
 {
-
-
     const CUSTOM_IMPORT_FOLDER = 'import/cron/day';
 
     const SUCCESS_MESSAGE = 'Import finished successfully from file - ';
@@ -67,8 +65,6 @@ class Day
         $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/test.log');
         $this->_logger = new \Zend\Log\Logger();
         $this->_logger->addWriter($writer);
-
-        $this->_logger->info('construct');
     }
 
     /**
@@ -76,15 +72,13 @@ class Day
      */
     public function execute()
     {
-
-        $this->_logger->info('daily cron import started at - ' . $this->_date->gmtDate('Y-m-d H:i:s'));
-        $this->_logger->info('execute');
-        ini_set('memory_limit', '2048M');
+        $this->_logger->info('daily cron started at - ' . $this->_date->gmtDate('Y-m-d H:i:s'));
+        ini_set('memory_limit', '4048M');
 
         $importDir = $this->_directoryList->getPath(DirectoryList::VAR_DIR) . '/' . self::CUSTOM_IMPORT_FOLDER ;
 
         $this->_logger->info('$importDir - '.$importDir);
-        $this->_logger->info(is_dir($importDir));
+//        $this->_logger->info(is_dir($importDir));
 
         if(!is_dir($importDir)) {
             mkdir($importDir, 0775);
@@ -92,7 +86,6 @@ class Day
 
         $fileList = scandir($importDir);
 
-        $this->_logger->info(print_r($fileList, true));
         $i = 0;
         foreach ($fileList as $file) {
 
@@ -100,6 +93,7 @@ class Day
                 continue;
             }
             $i++;
+            // $this->_logger->info(print_r($file, true));
             $importedFileName = $importDir . '/' . $file;
 
             $this->_logger->info('$importedFileName - '.$importedFileName);
@@ -110,7 +104,7 @@ class Day
                 $this->_logger->info(self::SUCCESS_MESSAGE . $file);
                 unlink($importDir. '/' .$file);
             } else {
-                foreach ($this->importModel->errors as $error) {
+                foreach ($this->_importModel->errors as $error) {
                     if (is_array($error)) {
                         $error = implode(' - ', $error);
                     }
@@ -118,12 +112,12 @@ class Day
                 }
 
             }
+
             if($i <= 1){
                 break;
             }
         }
-
-        $this->_logger->info('daily cron import finished at - ' . $this->_date->gmtDate('Y-m-d H:i:s'));
+        $this->_logger->info('daily cron finished at - ' . $this->_date->gmtDate('Y-m-d H:i:s'));
 
     }
 }
