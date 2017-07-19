@@ -93,12 +93,13 @@ class Day
         $fileList = scandir($importDir);
 
         $this->_logger->info(print_r($fileList, true));
-
+        $i = 0;
         foreach ($fileList as $file) {
 
             if ($file == '.' || $file == '..'){
                 continue;
             }
+            $i++;
             $importedFileName = $importDir . '/' . $file;
 
             $this->_logger->info('$importedFileName - '.$importedFileName);
@@ -116,6 +117,9 @@ class Day
                     $this->_logger->info( $error);
                 }
 
+            }
+            if($i <= 1){
+                break;
             }
         }
 
