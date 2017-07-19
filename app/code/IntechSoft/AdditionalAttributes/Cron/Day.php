@@ -14,6 +14,9 @@ class Data
 {
     const XML_PATH_REINDEX_TYPE = 'intechsoft/basic/enabled';
     const MAXTIMEVALUE = 2140000000;
+    const ATTRIBUTECODE = 'attribute_for_sale';
+    const ENTITYTYPE = 'catalog_product';
+    const FORSALEOPTION = 'for_sale';
     protected $_scopeConfig;
     protected $_logger;
 
@@ -80,26 +83,60 @@ class Data
                     $startTime = $this->dateToSeconds($productSpecialPriceStartDate);
                 }
                 $paramForSave = self::MAXTIMEVALUE;
+                $paramForSaveIsForSale = 1;
+
+
+                $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+
+                $attributeInfo = $objectManager->get(\Magento\Eav\Model\Entity\Attribute::class)
+                    ->loadByCode(self::ENTITYTYPE, self::ATTRIBUTECODE);
+
+                $attributeId = $attributeInfo->getAttributeId();
+                $attributeOptionAll = $objectManager->get(\Magento\Eav\Model\ResourceModel\Entity\Attribute\Option\Collection::class)
+                    ->setPositionOrder('asc')
+                    ->setAttributeFilter($attributeId)
+                    ->setStoreFilter()
+                    ->load();
+
+                $isForSaleOptionId = '';
+                foreach ($attributeOptionAll as $attributeOption){
+                    $optionLabelValue = $attributeOption->getData('default_value');
+                    if($optionLabelValue == self::FORSALEOPTION){
+                        $isForSaleOptionId = $attributeOption->getId();
+                        break;
+                    }
+                }
+
                 if($productSpecialPriceFinishDate == null && $productSpecialPriceStartDate == null){
                     $paramForSave = self::MAXTIMEVALUE;
+                    $paramForSaveIsForSale = $isForSaleOptionId;
                 } else if($productSpecialPriceFinishDate == null && $currentTime>$startTime){
                     $paramForSave = self::MAXTIMEVALUE;
+                    $paramForSaveIsForSale = $isForSaleOptionId;
                 } else if($productSpecialPriceStartDate == null && $currentTime<$finishTime){
                     $paramForSave = self::MAXTIMEVALUE;
+                    $paramForSaveIsForSale = $isForSaleOptionId;
                 } else if($finishTime>$currentTime && $currentTime>$startTime){
                     $paramForSave = self::MAXTIMEVALUE;
+                    $paramForSaveIsForSale = $isForSaleOptionId;
                 } else {
                     $paramForSave = self::MAXTIMEVALUE-$this->dateToSeconds($productForSave->getData('created_at'));
+                    $paramForSaveIsForSale = '';
                 }
 
             } else {
                 $paramForSave = self::MAXTIMEVALUE-$this->dateToSeconds($productForSave->getData('created_at'));
+                $paramForSaveIsForSale = '';
             }
-            echo $productId.'_';
             $productForSaveOne = '';
             $productForSaveOne = $objectManager->get('\Magento\Catalog\Model\Product')->load($productId);
             $productForSaveOne->setData('sorting_new_sale', $paramForSave);
             $productForSaveOne->getResource()->saveAttribute($productForSaveOne, 'sorting_new_sale');
+
+            $productForSaveTwo = '';
+            $productForSaveTwo = $objectManager->get('\Magento\Catalog\Model\Product')->load($productId);
+            $productForSaveTwo->setData(self::ATTRIBUTECODE, $paramForSaveIsForSale);
+            $productForSaveTwo->getResource()->saveAttribute($productForSaveTwo, 'is_for_sale');
         }
 
     }

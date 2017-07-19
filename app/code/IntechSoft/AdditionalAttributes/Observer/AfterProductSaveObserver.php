@@ -16,6 +16,9 @@ class AfterProductSaveObserver implements ObserverInterface
 {
 
     const MAXTIMEVALUE = 2140000000;
+    const ATTRIBUTECODE = 'attribute_for_sale';
+    const ENTITYTYPE = 'catalog_product';
+    const FORSALEOPTION = 'for_sale';
 
     /**
      * @var \Psr\Log\LoggerInterface
@@ -78,22 +81,51 @@ class AfterProductSaveObserver implements ObserverInterface
                 $startTime = $this->dateToSeconds($productSpecialPriceStartDate);
             }
 
+            //get is_for_sale Option id
+
+            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+
+            $attributeInfo = $objectManager->get(\Magento\Eav\Model\Entity\Attribute::class)
+                ->loadByCode(self::ENTITYTYPE, self::ATTRIBUTECODE);
+
+            $attributeId = $attributeInfo->getAttributeId();
+            $attributeOptionAll = $objectManager->get(\Magento\Eav\Model\ResourceModel\Entity\Attribute\Option\Collection::class)
+                ->setPositionOrder('asc')
+                ->setAttributeFilter($attributeId)
+                ->setStoreFilter()
+                ->load();
+            $isForSaleOptionId = '';
+            foreach ($attributeOptionAll as $attributeOption){
+                $optionLabelValue = $attributeOption->getData('default_value');
+                if($optionLabelValue == self::FORSALEOPTION){
+                    $isForSaleOptionId = $attributeOption->getId();
+                    break;
+                }
+            }
+
+
             if($productSpecialPriceFinishDate == null && $productSpecialPriceStartDate == null){
                 $observer->getProduct()->setData('sorting_new_sale', self::MAXTIMEVALUE);
+                $observer->getProduct()->setData(self::ATTRIBUTECODE, $isForSaleOptionId);
             } else if($productSpecialPriceFinishDate == null && $currentTime>$startTime){
                 $observer->getProduct()->setData('sorting_new_sale', self::MAXTIMEVALUE);
+                $observer->getProduct()->setData(self::ATTRIBUTECODE, $isForSaleOptionId);
             } else if($productSpecialPriceStartDate == null && $currentTime<$finishTime){
                 $observer->getProduct()->setData('sorting_new_sale', self::MAXTIMEVALUE);
+                $observer->getProduct()->setData(self::ATTRIBUTECODE, $isForSaleOptionId);
             } else if($finishTime>$currentTime && $currentTime>$startTime){
                 $observer->getProduct()->setData('sorting_new_sale', self::MAXTIMEVALUE);
+                $observer->getProduct()->setData(self::ATTRIBUTECODE, $isForSaleOptionId);
             } else {
                 $createDateParam = self::MAXTIMEVALUE - $this->dateToSeconds($observerProduct->getData('created_at'));
                 $observer->getProduct()->setData('sorting_new_sale', $createDateParam);
+                $observer->getProduct()->setData(self::ATTRIBUTECODE, '');
             }
 
         } else {
             $createDateParam = self::MAXTIMEVALUE - $this->dateToSeconds($observerProduct->getData('created_at'));
             $observer->getProduct()->setData('sorting_new_sale', $createDateParam);
+            $observer->getProduct()->setData(self::ATTRIBUTECODE, '');
         }
     }
 
