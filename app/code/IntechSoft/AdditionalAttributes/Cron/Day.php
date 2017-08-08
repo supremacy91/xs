@@ -136,7 +136,18 @@ class Data
                 $productForSaveCategories->setCategoryIds($arrayOfCategories)->save();
 
             } else {
+                $productForSaveCategories = '';
+                $productForSaveCategories = $objectManager->get('\Magento\Catalog\Model\Product')->load($productId);
+                $saleCategoryId = $this->_scopeConfig->getValue(self::XML_PATH_SALE_CATEGORY_ID, $storeScope);
+                $arrayOfCategories = $productForSaveCategories->getCategoryIds();
+                if(in_array($saleCategoryId, $arrayOfCategories)){
+                    if(($key = array_search($saleCategoryId, $arrayOfCategories)) !== false) {
+                        unset($arrayOfCategories[$key]);
+                    }
+                }
+                $productForSaveCategories->setCategoryIds($arrayOfCategories)->save();
                 $paramForSave = self::MAXTIMEVALUE-$this->dateToSeconds($productForSave->getData('created_at'));
+
                 //$paramForSaveIsForSale = '';
             }
             $productForSaveOne = '';

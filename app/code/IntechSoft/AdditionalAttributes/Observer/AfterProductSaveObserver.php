@@ -71,6 +71,9 @@ class AfterProductSaveObserver implements ObserverInterface
     {
         $observerProduct = $observer->getProduct();
         $productSpecialPrice = $observerProduct->getSpecialPrice();
+        $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
+        $saleCategoryId = $this->_scopeConfig->getValue(self::XML_PATH_SALE_CATEGORY_ID, $storeScope);
+
         if($productSpecialPrice > 0){
             $productSpecialPriceFinishDate = $observerProduct->getData('special_to_date');
             $productSpecialPriceStartDate = $observerProduct->getData('special_from_date');
@@ -85,8 +88,6 @@ class AfterProductSaveObserver implements ObserverInterface
                 $startTime = $this->dateToSeconds($productSpecialPriceStartDate);
             }
 
-            $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
-            $saleCategoryId = $this->_scopeConfig->getValue(self::XML_PATH_SALE_CATEGORY_ID, $storeScope);
 
             //get is_for_sale Option id
 
@@ -112,11 +113,24 @@ class AfterProductSaveObserver implements ObserverInterface
             } else {
                 $createDateParam = self::MAXTIMEVALUE - $this->dateToSeconds($observerProduct->getData('created_at'));
                 $observer->getProduct()->setData('sorting_new_sale', $createDateParam);
+                if(in_array($saleCategoryId, $arrayOfCategories)){
+                    if(($key = array_search($saleCategoryId, $arrayOfCategories)) !== false) {
+                        unset($arrayOfCategories[$key]);
+                    }
+                }
+                $observer->getProduct()->setCategoryIds($arrayOfCategories);
             }
 
         } else {
             $createDateParam = self::MAXTIMEVALUE - $this->dateToSeconds($observerProduct->getData('created_at'));
             $observer->getProduct()->setData('sorting_new_sale', $createDateParam);
+            $arrayOfCategories = $observer->getProduct()->getCategoryIds();
+            if(in_array($saleCategoryId, $arrayOfCategories)){
+                if(($key = array_search($saleCategoryId, $arrayOfCategories)) !== false) {
+                    unset($arrayOfCategories[$key]);
+                }
+            }
+            $observer->getProduct()->setCategoryIds($arrayOfCategories);
         }
     }
 
