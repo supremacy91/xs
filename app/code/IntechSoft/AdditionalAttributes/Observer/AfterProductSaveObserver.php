@@ -16,9 +16,10 @@ class AfterProductSaveObserver implements ObserverInterface
 {
 
     const MAXTIMEVALUE = 2140000000;
-    const ATTRIBUTECODE = 'attribute_for_sale';
+    //const ATTRIBUTECODE = 'attribute_for_sale';
     const ENTITYTYPE = 'catalog_product';
     const FORSALEOPTION = 'for_sale';
+    const XML_PATH_SALE_CATEGORY_ID = 'intechsoft/basic/salecategoryid';
 
     /**
      * @var \Psr\Log\LoggerInterface
@@ -41,12 +42,13 @@ class AfterProductSaveObserver implements ObserverInterface
      */
     protected $productFactory;
 
+    protected $_scopeConfig;
+
     /**
      * CmspagesDeleteObserver constructor.
      * @param \Psr\Log\LoggerInterface $loggerInterface
      * @param \Magento\Backend\Helper\Js $jsHelper
      * @param \Magento\Framework\App\RequestInterface $request
-     * @param \Magento\Framework\Message\ManagerInterface $messageManager
      * @param \Magento\Catalog\Model\ProductFactory $productFactory
      */
 
@@ -54,13 +56,15 @@ class AfterProductSaveObserver implements ObserverInterface
         \Psr\Log\LoggerInterface $loggerInterface,
         \Magento\Backend\Helper\Js $jsHelper,
         \Magento\Framework\App\RequestInterface $request,
-        \Magento\Catalog\Model\ProductFactory $productFactory
+        \Magento\Catalog\Model\ProductFactory $productFactory,
+        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
     ) {
         $this->_logger = $loggerInterface;
         $this->_jsHelper = $jsHelper;
         //$this->messageManager = $messageManager;
         $this->_request = $request;
         $this->productFactory = $productFactory;
+        $this->_scopeConfig = $scopeConfig;
     }
 
     public function execute(\Magento\Framework\Event\Observer $observer)
@@ -81,51 +85,38 @@ class AfterProductSaveObserver implements ObserverInterface
                 $startTime = $this->dateToSeconds($productSpecialPriceStartDate);
             }
 
+            $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
+            $saleCategoryId = $this->_scopeConfig->getValue(self::XML_PATH_SALE_CATEGORY_ID, $storeScope);
+
             //get is_for_sale Option id
 
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 
-            $attributeInfo = $objectManager->get(\Magento\Eav\Model\Entity\Attribute::class)
-                ->loadByCode(self::ENTITYTYPE, self::ATTRIBUTECODE);
-
-            $attributeId = $attributeInfo->getAttributeId();
-            $attributeOptionAll = $objectManager->get(\Magento\Eav\Model\ResourceModel\Entity\Attribute\Option\Collection::class)
-                ->setPositionOrder('asc')
-                ->setAttributeFilter($attributeId)
-                ->setStoreFilter()
-                ->load();
-            $isForSaleOptionId = '';
-            foreach ($attributeOptionAll as $attributeOption){
-                $optionLabelValue = $attributeOption->getData('default_value');
-                if($optionLabelValue == self::FORSALEOPTION){
-                    $isForSaleOptionId = $attributeOption->getId();
-                    break;
-                }
+            $arrayOfCategories = $observer->getProduct()->getCategoryIds();
+            if(!in_array($saleCategoryId, $arrayOfCategories)){
+                $arrayOfCategories[count($arrayOfCategories)]=strval($saleCategoryId);
             }
-
 
             if($productSpecialPriceFinishDate == null && $productSpecialPriceStartDate == null){
                 $observer->getProduct()->setData('sorting_new_sale', self::MAXTIMEVALUE);
-                $observer->getProduct()->setData(self::ATTRIBUTECODE, $isForSaleOptionId);
+                $observer->getProduct()->setCategoryIds($arrayOfCategories);
             } else if($productSpecialPriceFinishDate == null && $currentTime>$startTime){
                 $observer->getProduct()->setData('sorting_new_sale', self::MAXTIMEVALUE);
-                $observer->getProduct()->setData(self::ATTRIBUTECODE, $isForSaleOptionId);
+                $observer->getProduct()->setCategoryIds($arrayOfCategories);
             } else if($productSpecialPriceStartDate == null && $currentTime<$finishTime){
                 $observer->getProduct()->setData('sorting_new_sale', self::MAXTIMEVALUE);
-                $observer->getProduct()->setData(self::ATTRIBUTECODE, $isForSaleOptionId);
+                $observer->getProduct()->setCategoryIds($arrayOfCategories);
             } else if($finishTime>$currentTime && $currentTime>$startTime){
                 $observer->getProduct()->setData('sorting_new_sale', self::MAXTIMEVALUE);
-                $observer->getProduct()->setData(self::ATTRIBUTECODE, $isForSaleOptionId);
+                $observer->getProduct()->setCategoryIds($arrayOfCategories);
             } else {
                 $createDateParam = self::MAXTIMEVALUE - $this->dateToSeconds($observerProduct->getData('created_at'));
                 $observer->getProduct()->setData('sorting_new_sale', $createDateParam);
-                $observer->getProduct()->setData(self::ATTRIBUTECODE, '');
             }
 
         } else {
             $createDateParam = self::MAXTIMEVALUE - $this->dateToSeconds($observerProduct->getData('created_at'));
             $observer->getProduct()->setData('sorting_new_sale', $createDateParam);
-            $observer->getProduct()->setData(self::ATTRIBUTECODE, '');
         }
     }
 
@@ -136,5 +127,6 @@ class AfterProductSaveObserver implements ObserverInterface
         $timeInSeconds = mkTime($tempTimeArray[0], $tempTimeArray[1], $tempTimeArray[2], $tempDateArray[1], $tempDateArray[2], $tempDateArray[0]);
         return $timeInSeconds;
     }
+
 
 }

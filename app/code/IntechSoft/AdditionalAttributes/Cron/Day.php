@@ -14,11 +14,13 @@ class Data
 {
     const XML_PATH_REINDEX_TYPE = 'intechsoft/basic/enabled';
     const MAXTIMEVALUE = 2140000000;
-    const ATTRIBUTECODE = 'attribute_for_sale';
+    //const ATTRIBUTECODE = 'attribute_for_sale';
     const ENTITYTYPE = 'catalog_product';
     const FORSALEOPTION = 'for_sale';
+    const XML_PATH_SALE_CATEGORY_ID = 'intechsoft/basic/salecategoryid';
     protected $_scopeConfig;
     protected $_logger;
+
 
     public function __construct(\Psr\Log\LoggerInterface $logger,
        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
@@ -88,7 +90,7 @@ class Data
 
                 $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 
-                $attributeInfo = $objectManager->get(\Magento\Eav\Model\Entity\Attribute::class)
+                /*$attributeInfo = $objectManager->get(\Magento\Eav\Model\Entity\Attribute::class)
                     ->loadByCode(self::ENTITYTYPE, self::ATTRIBUTECODE);
 
                 $attributeId = $attributeInfo->getAttributeId();
@@ -105,38 +107,47 @@ class Data
                         $isForSaleOptionId = $attributeOption->getId();
                         break;
                     }
-                }
+                }*/
 
                 if($productSpecialPriceFinishDate == null && $productSpecialPriceStartDate == null){
                     $paramForSave = self::MAXTIMEVALUE;
-                    $paramForSaveIsForSale = $isForSaleOptionId;
+                    //$paramForSaveIsForSale = $isForSaleOptionId;
                 } else if($productSpecialPriceFinishDate == null && $currentTime>$startTime){
                     $paramForSave = self::MAXTIMEVALUE;
-                    $paramForSaveIsForSale = $isForSaleOptionId;
+                    //$paramForSaveIsForSale = $isForSaleOptionId;
                 } else if($productSpecialPriceStartDate == null && $currentTime<$finishTime){
                     $paramForSave = self::MAXTIMEVALUE;
-                    $paramForSaveIsForSale = $isForSaleOptionId;
+                    //$paramForSaveIsForSale = $isForSaleOptionId;
                 } else if($finishTime>$currentTime && $currentTime>$startTime){
                     $paramForSave = self::MAXTIMEVALUE;
-                    $paramForSaveIsForSale = $isForSaleOptionId;
+                    //$paramForSaveIsForSale = $isForSaleOptionId;
                 } else {
                     $paramForSave = self::MAXTIMEVALUE-$this->dateToSeconds($productForSave->getData('created_at'));
                     $paramForSaveIsForSale = '';
                 }
 
+                $productForSaveCategories = '';
+                $productForSaveCategories = $objectManager->get('\Magento\Catalog\Model\Product')->load($productId);
+                $saleCategoryId = $this->_scopeConfig->getValue(self::XML_PATH_SALE_CATEGORY_ID, $storeScope);
+                $arrayOfCategories = $productForSaveCategories->getCategoryIds();
+                if(!in_array($saleCategoryId, $arrayOfCategories)){
+                    $arrayOfCategories[count($arrayOfCategories)]=strval($saleCategoryId);
+                }
+                $productForSaveCategories->setCategoryIds($arrayOfCategories)->save();
+
             } else {
                 $paramForSave = self::MAXTIMEVALUE-$this->dateToSeconds($productForSave->getData('created_at'));
-                $paramForSaveIsForSale = '';
+                //$paramForSaveIsForSale = '';
             }
             $productForSaveOne = '';
             $productForSaveOne = $objectManager->get('\Magento\Catalog\Model\Product')->load($productId);
             $productForSaveOne->setData('sorting_new_sale', $paramForSave);
             $productForSaveOne->getResource()->saveAttribute($productForSaveOne, 'sorting_new_sale');
 
-            $productForSaveTwo = '';
+            /*$productForSaveTwo = '';
             $productForSaveTwo = $objectManager->get('\Magento\Catalog\Model\Product')->load($productId);
             $productForSaveTwo->setData(self::ATTRIBUTECODE, $paramForSaveIsForSale);
-            $productForSaveTwo->getResource()->saveAttribute($productForSaveTwo, 'is_for_sale');
+            $productForSaveTwo->getResource()->saveAttribute($productForSaveTwo, 'is_for_sale');*/
         }
 
     }
