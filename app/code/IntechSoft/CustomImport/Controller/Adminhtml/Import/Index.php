@@ -27,7 +27,7 @@ class Index extends Action
     }
 
     /**
-     * @return void
+     * @return mixed
      */
     public function execute()
     {

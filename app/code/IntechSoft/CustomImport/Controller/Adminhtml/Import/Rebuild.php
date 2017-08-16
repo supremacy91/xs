@@ -24,20 +24,18 @@ class Rebuild extends Action
      * Index constructor.
      * @param \IntechSoft\CustomImport\Model\Url\Rebuilt $rebuiltModel
      * @param \Magento\Backend\App\Action\Context $context
-     * @param \Magento\Framework\Message\ManagerInterface $messageManager
      */
     public function __construct(
         \IntechSoft\CustomImport\Model\Url\Rebuilt $rebuiltModel,
-        \Magento\Backend\App\Action\Context $context,
-        \Magento\Framework\Message\ManagerInterface $messageManager
+        \Magento\Backend\App\Action\Context $context
     ) {
         parent::__construct($context);
         $this->_rebuiltModel = $rebuiltModel;
-        $this->_messageManager = $messageManager;
+        $this->_messageManager = $context->getMessageManager();
     }
 
     /**
-     * @return void
+     * @return mixed
      */
     public function execute()
     {
