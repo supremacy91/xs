@@ -1,14 +1,19 @@
 <?php
 namespace IntechSoft\CustomImport\Cron\Import;
-use \Magento\Framework\App\Filesystem\DirectoryList;
+
+use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\MediaStorage\Model\File\UploaderFactory;
+use Magento\Framework\Filesystem;
+use IntechSoft\CustomImport\Model\ImportFactory;
+use Magento\Framework\Stdlib\DateTime\DateTime;
+use IntechSoft\CustomImport\Helper\UrlRegenerate;
 
 class Day
 {
     const CUSTOM_IMPORT_FOLDER = 'import/cron/day';
+    const SUCCESS_MESSAGE      = 'Import finished successfully from file - ';
+    const FAIL_MESSAGE         = 'Import fail from file - ';
 
-    const SUCCESS_MESSAGE = 'Import finished successfully from file - ';
-
-    const FAIL_MESSAGE = 'Import fail from file - ';
     /**
      * @var \Psr\Log\LoggerInterface
      */
@@ -40,26 +45,32 @@ class Day
     protected $_date;
 
     /**
+     * @var \IntechSoft\CustomImport\Helper\UrlRegenerate
+     */
+    protected $_urlRegenerateHelper;
+
+    /**
      * Import constructor.
      * @param \Magento\MediaStorage\Model\File\UploaderFactory $uploader
      * @param \Magento\Framework\Filesystem $filesystem
-     * @param \IntechSoft\CustomImport\Model\Import $importModel
-     * @param \Magento\Framework\Filesystem\DirectoryList $directoryList
+     * @param \IntechSoft\CustomImport\Model\ImportFactory $importModel
+     * @param \Magento\Framework\App\Filesystem\DirectoryList $directoryList
      * @param \Magento\Framework\Stdlib\DateTime\DateTime $date
      */
     public function __construct(
-        \Magento\MediaStorage\Model\File\UploaderFactory $uploader,
-        \Magento\Framework\Filesystem $filesystem,
-        \IntechSoft\CustomImport\Model\Import $importModel,
-        \Magento\Framework\Filesystem\DirectoryList $directoryList,
-        \Magento\Framework\Stdlib\DateTime\DateTime $date
-
+        UploaderFactory $uploader,
+        Filesystem $filesystem,
+        ImportFactory $importModel,
+        DirectoryList $directoryList,
+        DateTime $date,
+        UrlRegenerate $urlRegenerate
     ) {
         $this->_uploader = $uploader;
         $this->_filesystem = $filesystem;
         $this->_importModel = $importModel;
         $this->_directoryList = $directoryList;
         $this->_date = $date;
+        $this->_urlRegenerateHelper = $urlRegenerate;
         //$this->_logger = $logger;
 
         $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/test.log');
@@ -72,13 +83,11 @@ class Day
      */
     public function execute()
     {
-        $this->_logger->info('daily cron started at - ' . $this->_date->gmtDate('Y-m-d H:i:s'));
         ini_set('memory_limit', '4048M');
 
+        $this->_logger->info('daily cron started at - ' . $this->_date->gmtDate('Y-m-d H:i:s'));
         $importDir = $this->_directoryList->getPath(DirectoryList::VAR_DIR) . '/' . self::CUSTOM_IMPORT_FOLDER ;
-
         $this->_logger->info('$importDir - '.$importDir);
-//        $this->_logger->info(is_dir($importDir));
 
         if(!is_dir($importDir)) {
             mkdir($importDir, 0775);
@@ -88,32 +97,30 @@ class Day
 
         $i = 0;
         foreach ($fileList as $file) {
-
             if ($file == '.' || $file == '..'){
                 continue;
             }
             $i++;
-            // $this->_logger->info(print_r($file, true));
+
             $importedFileName = $importDir . '/' . $file;
-
             $this->_logger->info('$importedFileName - '.$importedFileName);
+            $importModel = $this->_importModel->create();
+            $importModel->setCsvFile($importedFileName, true)->process();
 
-            $this->_importModel->setCsvFile($importedFileName, true);
-            $this->_importModel->process();
-            if (count($this->_importModel->errors) == 0) {
+            if (count($importModel->errors) == 0) {
                 $this->_logger->info(self::SUCCESS_MESSAGE . $file);
                 unlink($importDir. '/' .$file);
+                $this->_urlRegenerateHelper->regenerateUrl();
             } else {
-                foreach ($this->_importModel->errors as $error) {
+                foreach ($importModel->errors as $error) {
                     if (is_array($error)) {
                         $error = implode(' - ', $error);
                     }
                     $this->_logger->info( $error);
                 }
-
             }
 
-            if($i <= 1){
+            if($i <= 1) {
                 break;
             }
         }

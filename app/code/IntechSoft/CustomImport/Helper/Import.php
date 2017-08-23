@@ -3,26 +3,34 @@
 namespace IntechSoft\CustomImport\Helper;
 
 use Magento\Framework\App\Helper\Context;
+use Magento\Framework\App\Helper\AbstractHelper;
+use Magento\Framework\ObjectManagerInterface;
+use Magento\Eav\Model\Entity\Attribute\SetFactory;
+use Magento\Framework\Registry;
+use Magento\Framework\App\Filesystem\DirectoryList;
 
-class Import extends \Magento\Framework\App\Helper\AbstractHelper
+class Import extends AbstractHelper
 {
     const IMAGE_URL_TO_CUT = 'https://calexis.nl/userfiles/files';
 
-    public $rootCategory = 'Default Category';
-
     protected $_registry;
-
-    /**
-     * @var \Magento\Framework\ObjectManagerInterface
-     */
     protected $objectManager;
+    protected $headers;
+    protected $itemImage;
+    protected $_resources;
+    protected $_attributeSetFactory;
+    protected $directory_list;
+    protected $imagesColumnArray = array(
+        'base_image',
+        'small_image',
+        'thumbnail_image');
 
+    public $rootCategory = 'Default Category';
     public $allowedImagesExtensions = array (
         'jpg',
         'png',
         'gif'
     );
-
     protected $standardAttributes = array(
         'attribute_set_code' => 'Default',
         'product_type' => 'simple',
@@ -38,7 +46,6 @@ class Import extends \Magento\Framework\App\Helper\AbstractHelper
         'default_category' => '',
         'visibility' => 'Not Visible Individually'
     );
-
     public $attributesMapping = array(
         'SKU' => 'sku',
         'Short Description' => 'short_description',
@@ -72,38 +79,19 @@ class Import extends \Magento\Framework\App\Helper\AbstractHelper
         'Color Hex' => 'color_hex'
     );
 
-    protected $headers;
-
-    protected $itemImage;
-    protected $_resources;
-
-    /**
-     * @var \Magento\Eav\Model\Entity\Attribute\SetFactory
-     */
-    protected $_attributeSetFactory;
-
-    protected $imagesColumnArray = array(
-        'base_image',
-        'small_image',
-        'thumbnail_image');
-
-
-    protected $directory_list;
-    /**
-     * Import constructor.
-     * @param \Magento\Eav\Model\Entity\Attribute\SetFactory $_attributeSetFactory
-     */
     public function __construct(
-        \Magento\Framework\ObjectManagerInterface $objectmanager,
-        \Magento\Eav\Model\Entity\Attribute\SetFactory $attributeSetFactory,
-        \Magento\Framework\Registry $registry,
-        \Magento\Framework\App\Filesystem\DirectoryList $directory_list
+        ObjectManagerInterface $objectManager,
+        SetFactory $attributeSetFactory,
+        Registry $registry,
+        DirectoryList $directory_list,
+        Context $context
     )
     {
         $this->directory_list = $directory_list;
         $this->_attributeSetFactory = $attributeSetFactory;
-        $this->objectManager = $objectmanager;
+        $this->objectManager = $objectManager;
         $this->_registry = $registry;
+        parent::__construct($context);
     }
 
 
@@ -114,7 +102,6 @@ class Import extends \Magento\Framework\App\Helper\AbstractHelper
         $data = $this->getConvertedData($data);
 
         return $data;
-
     }
 
     public function prepareDataConfigurable($data)
@@ -124,7 +111,6 @@ class Import extends \Magento\Framework\App\Helper\AbstractHelper
         $data = $this->getConvertedDataConfigurable($data);
 
         return $data;
-
     }
 
 
@@ -134,10 +120,10 @@ class Import extends \Magento\Framework\App\Helper\AbstractHelper
         foreach ($headers as $item) {
             $preparedHeaders[] = $this->prepareHeaderItem($item);
         }
+
         $standardHeaders = array_keys($this->getStandardAttributes());
-        for($i = 0; $i < count($standardHeaders); $i++)
-        {
-            if(!in_array($standardHeaders[$i], $preparedHeaders)){
+        for($i = 0, $j = count($standardHeaders); $i < $j; $i++) {
+            if(!in_array($standardHeaders[$i], $preparedHeaders)) {
                 array_push($preparedHeaders, $standardHeaders[$i]);
             }
         }
@@ -148,27 +134,33 @@ class Import extends \Magento\Framework\App\Helper\AbstractHelper
     {
         $this->standardAttributes['product_type'] = 'simple';
         $convertedData = array();
+
         $counter = 0;
-        foreach ($data as $index => $item)
-        {
+        foreach ($data as $index => $item) {
+
             if (!$index) {
                 $convertedData[] = $this->headers;
                 continue;
             }
+
             $preparedItems = array();
             $this->itemImage = '';
-            for($i = 0; $i < count($this->headers); $i++)
-            {
+            for($i = 0, $j = count($this->headers); $i < $j; $i++) {
                 $defaultValue = $this->checkDefaultValue($this->headers[$i]);
                 if (!isset($item[$i]) && $defaultValue !== false) {
                     $preparedItems[] = $this->prepareItem($defaultValue, $this->headers[$i]);
                 } else {
-                    $preparedItems[] = $this->prepareItem($item[$i], $this->headers[$i]);
+                    if($this->headers[$i] == 'sku') {
+                        $preparedItems[] = $this->prepareItem((int)$item[$i], $this->headers[$i]);
+                    } else {
+                        $preparedItems[] = $this->prepareItem($item[$i], $this->headers[$i]);
+                    }
                 }
             }
             $convertedData[] = $preparedItems;
             $counter++;
         }
+
         $convertedData = $this->checkNameAttribute($convertedData);
         $convertedData = $this->checkUrlKeyAttribute($convertedData);
         $convertedData = $this->addDefaultCategory($convertedData);
@@ -297,96 +289,78 @@ class Import extends \Magento\Framework\App\Helper\AbstractHelper
     {
         $model = $this->objectManager->create('Magento\Catalog\Model\Product');
 
-        $typeKey = array_search('product_type',$this->headers);
+        $typeKey = array_search('product_type', $this->headers);
         $data = array();
         $urlKey = false;
-            for($i = 0; $i < count($convertedData); $i++)
-            {
+            for($i = 0; $i < count($convertedData); $i++) {
                 if ($i == 0) {
                     $data[$i] = $convertedData[$i];
                     if(!in_array('url_key', $data[$i])){
                         $urlKey = true;
                         array_push($data[$i] , 'url_key');
                     }
-
                 } else {
                     $data[$i] = $convertedData[$i];
-                    if($urlKey){
+                    if($urlKey) {
                         if($convertedData[$i][$typeKey] == 'simple'){
-
-                            $this->_resources = \Magento\Framework\App\ObjectManager::getInstance()
-                                ->get('Magento\Framework\App\ResourceConnection');
-                            $connection= $this->_resources->getConnection();
+                            $this->_resources = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\App\ResourceConnection');
+                            $connection = $this->_resources->getConnection();
                             $urlKey = array();
-                            $urlKey[$model->formatUrlKey($convertedData[$i][$this->getColumnImdexByName('brand')]. '-' . $convertedData[$i][$this->getColumnImdexByName('sku')]).'.html'] = $convertedData[$i][$this->getColumnImdexByName('sku')];
-                            $urlKeyDuplicates = $connection->fetchAssoc(
-                                $connection->select()->from(
-                                    ['url_rewrite' => $connection->getTableName('url_rewrite')],
-                                    ['request_path', 'store_id']
-                                )->joinLeft(
-                                    ['cpe' => $connection->getTableName('catalog_product_entity')],
-                                    "cpe.entity_id = url_rewrite.entity_id"
-                                )->where('request_path IN (?)', array_keys($urlKey))
-                                    ->where('cpe.sku not in (?)', array_values($urlKey))
-                            );
-                            $urlKey= $model->formatUrlKey($convertedData[$i][$this->getColumnImdexByName('brand')]. '-' . $convertedData[$i][$this->getColumnImdexByName('sku')]);
+                            $urlKey[$model->formatUrlKey($convertedData[$i][$this->getColumnImdexByName('brand')]. '-' . $convertedData[$i][$this->getColumnImdexByName('sku')])] = $convertedData[$i][$this->getColumnImdexByName('sku')];
+                            $urlKeyDuplicates = $this->getUrlKeyDuplicates($connection, $urlKey);
+                            $urlKey = $model->formatUrlKey($convertedData[$i][$this->getColumnImdexByName('brand')]. '-' . $convertedData[$i][$this->getColumnImdexByName('sku')]);
+
                             if($urlKeyDuplicates){
                                 array_push($data[$i], '');
-                            }else{
+                            } else {
                                 array_push($data[$i], $urlKey);
                             }
-                        }else{
 
-                            $this->_resources = \Magento\Framework\App\ObjectManager::getInstance()
-                                ->get('Magento\Framework\App\ResourceConnection');
-                            $connection= $this->_resources->getConnection();
+                        } else {
+                            $this->_resources = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\App\ResourceConnection');
+                            $connection = $this->_resources->getConnection();
                             $urlKey = array();
-                            $urlKey[$model->formatUrlKey($convertedData[$i][$this->getColumnImdexByName('brand')]. '-' . $convertedData[$i][$this->getColumnImdexByName('group')]).'.html'] = $convertedData[$i][$this->getColumnImdexByName('sku')];
-                            $urlKeyDuplicates = $connection->fetchAssoc(
-                                $connection->select()->from(
-                                    ['url_rewrite' => $connection->getTableName('url_rewrite')],
-                                    ['request_path', 'store_id']
-                                )->joinLeft(
-                                    ['cpe' => $connection->getTableName('catalog_product_entity')],
-                                    "cpe.entity_id = url_rewrite.entity_id"
-                                )->where('request_path IN (?)', array_keys($urlKey))
-                                    ->where('cpe.sku not in (?)', array_values($urlKey))
-                            );
-                            $urlKey = $model->formatUrlKey($convertedData[$i][$this->getColumnImdexByName('brand')]. '-' . $convertedData[$i][$this->getColumnImdexByName('group')]);
+                            $urlKey[$model->formatUrlKey($convertedData[$i][$this->getColumnImdexByName('brand')]. '-' . $convertedData[$i][$this->getColumnImdexByName('group')])] = $convertedData[$i][$this->getColumnImdexByName('sku')];
+                            $urlKey[$model->formatUrlKey($convertedData[$i][$this->getColumnImdexByName('brand')]. '-' . $convertedData[$i][$this->getColumnImdexByName('group')].'-'.$convertedData[$i][$this->getColumnImdexByName('sku')])] = $convertedData[$i][$this->getColumnImdexByName('sku')];
+                            $urlKeyDuplicates = $this->getUrlKeyDuplicates($connection, $urlKey);
+                            $urlKey = $model->formatUrlKey($convertedData[$i][$this->getColumnImdexByName('brand')]. '-' . $convertedData[$i][$this->getColumnImdexByName('group')].'-'.$convertedData[$i][$this->getColumnImdexByName('sku')]);
                             if($urlKeyDuplicates){
-                                array_push($data[$i], '');
+                                array_push($data[$i], $urlKey);
                             }else{
                                 array_push($data[$i], $urlKey);
                             }
                         }
                     }elseif($convertedData[$i][$typeKey] != 'simple'){
-                        $this->_resources = \Magento\Framework\App\ObjectManager::getInstance()
-                            ->get('Magento\Framework\App\ResourceConnection');
+                        $this->_resources = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\App\ResourceConnection');
                         $connection= $this->_resources->getConnection();
                         $urlKey = array();
-                        $urlKey[$model->formatUrlKey($convertedData[$i][$this->getColumnImdexByName('brand')]. '-' . $convertedData[$i][$this->getColumnImdexByName('group')]).'.html'] = $convertedData[$i][$this->getColumnImdexByName('sku')];
-                        $urlKeyDuplicates = $connection->fetchAssoc(
-                            $connection->select()->from(
-                                ['url_rewrite' => $connection->getTableName('url_rewrite')],
-                                ['request_path', 'store_id']
-                            )->joinLeft(
-                                ['cpe' => $connection->getTableName('catalog_product_entity')],
-                                "cpe.entity_id = url_rewrite.entity_id"
-                            )->where('request_path IN (?)', array_keys($urlKey))
-                                ->where('cpe.sku not in (?)', array_values($urlKey))
-                        );
-                        $urlKey = $model->formatUrlKey($convertedData[$i][$this->getColumnImdexByName('brand')]. '-' . $convertedData[$i][$this->getColumnImdexByName('group')]);
+                        $urlKey[$model->formatUrlKey($convertedData[$i][$this->getColumnImdexByName('brand')]. '-' . $convertedData[$i][$this->getColumnImdexByName('group')])] = $convertedData[$i][$this->getColumnImdexByName('sku')];
+                        $urlKey[$model->formatUrlKey($convertedData[$i][$this->getColumnImdexByName('brand')]. '-' . $convertedData[$i][$this->getColumnImdexByName('group')].'-'.$convertedData[$i][$this->getColumnImdexByName('sku')])] = $convertedData[$i][$this->getColumnImdexByName('sku')];
+                        $urlKeyDuplicates = $this->getUrlKeyDuplicates($connection, $urlKey);
+                        $urlKey = $model->formatUrlKey($convertedData[$i][$this->getColumnImdexByName('brand')]. '-' . $convertedData[$i][$this->getColumnImdexByName('group')].'-'.$convertedData[$i][$this->getColumnImdexByName('sku')]);
+
                         if($urlKeyDuplicates){
-                            array_push($data[$i], '');
+                            array_push($data[$i], $urlKey);
                         }else{
                             array_push($data[$i], $urlKey);
                         }
                     }
-
                 }
             }
 
         return $data;
+    }
+
+    protected function getUrlKeyDuplicates($connection, $urlKey)
+    {
+        return $connection->fetchAssoc($connection->select()->from(
+            ['catalog_product_entity_varchar' => $connection->getTableName('catalog_product_entity_varchar')],
+            ['value', 'store_id']
+        )->joinLeft(
+            ['cpe' => $connection->getTableName('catalog_product_entity')],
+            "cpe.entity_id = catalog_product_entity_varchar.entity_id"
+        )->where('value IN (?)', array_keys($urlKey))
+            ->Where('cpe.sku IN (?)', array_values($urlKey)));
     }
 
     public function addDefaultCategory($convertedData)
@@ -438,6 +412,7 @@ class Import extends \Magento\Framework\App\Helper\AbstractHelper
         $convertedItem = $this->encodToEncodUtf8($convertedItem);
         $convertedItem = str_replace(',', '.', $convertedItem);
         $convertedItem = str_replace('|', ',', $convertedItem);
+
         if ($column == 'categories') {
             $convertedItem = str_replace(' > ', '/', $convertedItem);
             $convertedItem = $this->rootCategory . '/' . $convertedItem;
@@ -477,9 +452,11 @@ class Import extends \Magento\Framework\App\Helper\AbstractHelper
 
         } elseif (gettype($path) == 'string' && $path != '') {
             $path = str_replace(self::IMAGE_URL_TO_CUT, '',$path);
-            if (!preg_match("/^[a-zA-Z\d\/\.\_\-\|]*$/", $path)) {
+
+            if (!preg_match("/^[a-zA-Z\d\/\.\_\-\|]*/", $path)) {
                 $path = '';
             }
+
             $path = str_replace('|', ',',$path);
             $images = explode(',', $path);
 
@@ -505,48 +482,48 @@ class Import extends \Magento\Framework\App\Helper\AbstractHelper
         $convertedData = array();
         $counter = 0;
         $group = '';
-        $groupKey = array_search('group',$this->headers);
-        $colorKey = array_search('color',$this->headers);
-        $sizeKey = array_search('size',$this->headers);
-        $variaionsKey = array_search('configurable_variations',$this->headers);
-        $skuKey = array_search('SKU',$this->headers);
+        $groupKey     = array_search('group', $this->headers);
+        $colorKey     = array_search('color', $this->headers);
+        $sizeKey      = array_search('size', $this->headers);
+        $variaionsKey = array_search('configurable_variations', $this->headers);
+        $skuKey       = array_search('sku', $this->headers);
         $configurableVariation = '';
         $this->standardAttributes['product_type'] = 'configurable';
         $this->standardAttributes['visibility'] = 'Catalog| Search';
-        $countElements = count($data)-1;
-        foreach ($data as $index => $item)
-        {
+        $countElements = count($data) - 1;
+
+        foreach ($data as $index => $item) {
             if (!$index) {
                 $convertedData[] = $this->headers;
                 continue;
             }
+
             $preparedItems = array();
             $this->itemImage = '';
-            if(!$group || $group != $item[$groupKey]){
-                for($i = 0; $i < count($this->headers); $i++)
-                {
+            if(!$group || $group != $item[$groupKey]) {
+                for($i = 0; $i < count($this->headers); $i++) {
+
                     $defaultValue = $this->checkDefaultValue($this->headers[$i]);
                     if (!isset($item[$i]) && $defaultValue !== false) {
                         $preparedItems[] = $this->prepareItem($defaultValue, $this->headers[$i]);
                     } else {
                         if($this->headers[$i] == 'sku'){
-                            $preparedItems[] = $this->prepareItem($item[$i].'-conf', $this->headers[$i]);
+                            $preparedItems[] = $this->prepareItem((int)$item[$i].'-conf', $this->headers[$i]);
                         }else{
                             $preparedItems[] = $this->prepareItem($item[$i], $this->headers[$i]);
                         }
-
                     }
                 }
                 if($configurableVariation){
                     $convertedData[$counter][$variaionsKey] = $configurableVariation;
                 }
                 $configurableVariation = '';
-                $configurableVariation .= 'sku='.$this->prepareItem($item[$skuKey]) . ',color='.$this->prepareItem($item[$colorKey]) . ',size='.$this->prepareItem($item[$sizeKey]);
+                $configurableVariation .= 'sku='.(int)$this->prepareItem($item[$skuKey]) . ',color='.$this->prepareItem($item[$colorKey]) . ',size='.$this->prepareItem($item[$sizeKey]);
                 $group = $item[$groupKey];
                 $convertedData[] = $preparedItems;
                 $counter++;
             }else{
-                $configurableVariation .= '|sku='.$this->prepareItem($item[$skuKey]) . ',color='.$this->prepareItem($item[$colorKey]) . ',size='.$this->prepareItem($item[$sizeKey]);
+                $configurableVariation .= '|sku='.(int)$this->prepareItem($item[$skuKey]) . ',color='.$this->prepareItem($item[$colorKey]) . ',size='.$this->prepareItem($item[$sizeKey]);
             }
             if($countElements == $index && $configurableVariation){
                 $convertedData[$counter][$variaionsKey] = $configurableVariation;
