@@ -16,7 +16,9 @@ class AfterProductSaveObserver implements ObserverInterface
 {
 
     const MAXTIMEVALUE = 2140000000;
-    //const ATTRIBUTECODE = 'attribute_for_sale';
+    const ATTRIBUTECODE = 'attribute_for_sale';
+    const ATTRIBUTECODE_SALE_VALUE = 'for_sale';
+    const ATTRIBUTECODE_NOTSALE_VALUE = 'not_for_sale';
     const ENTITYTYPE = 'catalog_product';
     const FORSALEOPTION = 'for_sale';
     const XML_PATH_SALE_CATEGORY_ID = 'intechsoft/basic/salecategoryid';
@@ -132,6 +134,38 @@ class AfterProductSaveObserver implements ObserverInterface
             }
             $observer->getProduct()->setCategoryIds($arrayOfCategories);
         }
+
+        $discountData = $observer->getProduct()->getData('discount');
+        $saleValue = '';
+
+        if($discountData == 'New Collection'){
+            $saleValue = self::ATTRIBUTECODE_NOTSALE_VALUE;
+        } else if($discountData == 'Sale'){
+            $saleValue = self::ATTRIBUTECODE_SALE_VALUE;
+        } else {
+            $saleValue = self::ATTRIBUTECODE_NOTSALE_VALUE;
+        }
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $attributeInfo = $objectManager->get(\Magento\Eav\Model\Entity\Attribute::class)
+                    ->loadByCode(self::ENTITYTYPE, self::ATTRIBUTECODE);
+
+                $attributeId = $attributeInfo->getAttributeId();
+                $attributeOptionAll = $objectManager->get(\Magento\Eav\Model\ResourceModel\Entity\Attribute\Option\Collection::class)
+                    ->setPositionOrder('asc')
+                    ->setAttributeFilter($attributeId)
+                    ->setStoreFilter()
+                    ->load();
+
+                $isForSaleOptionId = '';
+                foreach ($attributeOptionAll as $attributeOption){
+                    $optionLabelValue = $attributeOption->getData('default_value');
+                    if($optionLabelValue == $saleValue){
+                        $isForSaleOptionId = $attributeOption->getId();
+                        break;
+                    }
+                }
+        $observer->getProduct()->setData(self::ATTRIBUTECODE, $isForSaleOptionId);
+
     }
 
     private function dateToSeconds($inputDate){
