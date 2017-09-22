@@ -20,7 +20,7 @@ define([
             productStatusSelector: '.stock.available',
             addToCartButtonSelector: '.action.tocart',
             addToCartButtonDisabledClass: 'disabled',
-            addToCartButtonTextWhileAdding: $t('Adding...'),
+            addToCartButtonTextWhileAdding: $t('Toevoegen...'),
             addToCartButtonTextAdded: $t('Added'),
             addToCartButtonTextDefault: $t('Add to Cart'),
             namespace: 'ajaxcartpro'

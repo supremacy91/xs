@@ -31,6 +31,7 @@ class ProductsList extends \Magento\CatalogWidget\Block\Product\ProductsList
         \Magento\Catalog\Helper\ImageFactory $imageHelperFactory,
         \Magento\Framework\Url\Helper\Data $urlHelper,
         \Codazon\ProductFilter\Block\ImageBuilderFactory $customImageBuilderFactory,
+        \Magento\CatalogInventory\Helper\Stock $stockFilter,
         array $data = []
     ) {
         $this->productCollectionFactory = $productCollectionFactory;
@@ -42,6 +43,7 @@ class ProductsList extends \Magento\CatalogWidget\Block\Product\ProductsList
         $this->urlHelper = $urlHelper;
         $this->conditionsHelper = $conditionsHelper;
         $this->imageHelperFactory = $imageHelperFactory;
+        $this->stockFilter = $stockFilter;
         
         //$this->reviewFactory = $reviewFactory;
         $this->customImageBuilderFactory = $customImageBuilderFactory;
@@ -129,6 +131,7 @@ class ProductsList extends \Magento\CatalogWidget\Block\Product\ProductsList
             case 'all_products': $collection = $this->_getAllProductProductCollection();break;
             case 'bestseller_products': $collection = $this->_getBestSellerProductCollection();break;
         }
+        $this->stockFilter->addInStockFilterToCollection($collection);
         $sort = explode(' ', $this->getData('order_by'));
         $collection->addAttributeToSort($sort[0],$sort[1]);
 
