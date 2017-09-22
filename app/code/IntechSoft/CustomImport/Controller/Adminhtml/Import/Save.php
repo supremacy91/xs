@@ -64,7 +64,6 @@ class Save extends Action
      * @param \Magento\Framework\Filesystem $filesystem
      * @param \IntechSoft\CustomImport\Model\Import $importModel
      * @param \Magento\Framework\Filesystem\DirectoryList $directoryList
-     * @param \Magento\Framework\Message\ManagerInterface $messageManager
      * @param \IntechSoft\CustomImport\Model\Url\Rebuilt $rebuiltModel
      */
     public function __construct(
@@ -75,7 +74,6 @@ class Save extends Action
         \IntechSoft\CustomImport\Model\Import $importModel,
         \Magento\Framework\Filesystem\DirectoryList $directoryList,
         \Magento\Indexer\Model\Indexer\CollectionFactory $indexerCollectionFactory,
-        \Magento\Framework\Message\ManagerInterface $messageManager,
         \IntechSoft\CustomImport\Model\Url\Rebuilt $rebuiltModel
     ) {
         parent::__construct($context);
@@ -84,12 +82,12 @@ class Save extends Action
         $this->importModel = $importModel;
         $this->directoryList = $directoryList;
         $this->indexerCollectionFactory = $indexerCollectionFactory;
-        $this->_messageManager = $messageManager;
+        $this->_messageManager = $context->getMessageManager();
         $this->_rebuiltModel = $rebuiltModel;
     }
 
     /**
-     * @return void
+     * @return mixed
      */
     public function execute()
     {
@@ -161,7 +159,7 @@ class Save extends Action
 
     /**
      * @param $oldName
-     * @return new file name
+     * @return string file name
      */
     protected function getFileName($oldName)
     {
@@ -180,7 +178,6 @@ class Save extends Action
             if ($indexer->getStatus() != 'valid'){
                 $indexer->reindexAll();
             }
-
         }
     }
 
