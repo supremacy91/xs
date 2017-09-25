@@ -10,7 +10,7 @@ namespace IntechSoft\AdditionalAttributes\Cron;
  * @version     1.0.1
  */
 
-class Data
+class Day
 {
     const XML_PATH_REINDEX_TYPE = 'intechsoft/basic/enabled';
     const MAXTIMEVALUE = 2140000000;
