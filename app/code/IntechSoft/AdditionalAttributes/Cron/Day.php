@@ -10,7 +10,7 @@ namespace IntechSoft\AdditionalAttributes\Cron;
  * @version     1.0.1
  */
 
-class Data
+class Day
 {
     const XML_PATH_REINDEX_TYPE = 'intechsoft/basic/enabled';
     const MAXTIMEVALUE = 2140000000;
@@ -174,7 +174,6 @@ class Data
             $attributeOptionAll = $objectManager->get(\Magento\Eav\Model\ResourceModel\Entity\Attribute\Option\Collection::class)
                 ->setPositionOrder('asc')
                 ->setAttributeFilter($attributeId)
-                ->setStoreFilter()
                 ->load();
 
             $isForSaleOptionId = '';
