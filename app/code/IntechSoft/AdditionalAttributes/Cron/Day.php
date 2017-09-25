@@ -174,7 +174,6 @@ class Day
             $attributeOptionAll = $objectManager->get(\Magento\Eav\Model\ResourceModel\Entity\Attribute\Option\Collection::class)
                 ->setPositionOrder('asc')
                 ->setAttributeFilter($attributeId)
-                ->setStoreFilter()
                 ->load();
 
             $isForSaleOptionId = '';
