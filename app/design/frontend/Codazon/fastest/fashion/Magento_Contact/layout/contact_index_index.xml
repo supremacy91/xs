@@ -27,7 +27,12 @@
 					</block>
 				</container>
 				<container name="content.right" htmlTag="div" htmlClass="col-sm-12">
-					<block class="Magento\Framework\View\Element\Template" name="contact.map" before="-" template="Magento_Contact::store_map.phtml">
+					<!--<block class="Magento\Framework\View\Element\Template" name="contact.map" before="-" template="Magento_Contact::store_map.phtml">
+					</block>-->
+					<block class="Magento\Cms\Block\Block" name="contact_page_right">
+						<arguments>
+							<argument name="block_id" xsi:type="string">contact_page_right</argument>
+						</arguments>
 					</block>
 				</container>
 				

@@ -100,3 +100,35 @@
     });
 </script>
 <?php endif; ?>
+
+<?php
+	/* 
+		09-08-2017 LS: Added regarding misplacement of errors on product view page
+		Check here for documentation: https://github.com/magento/magento2/issues/5428
+		If this issue is fixed during an new update, please remove code below.
+	*/ 
+	'Ik kom hier wel!';
+?>
+<script type="text/javascript">
+    require([
+        "jquery"
+    ], function($){
+        $(document).ready(function () {
+            'use strict';
+            var validationErrorMoved = false;
+            $('#product-addtocart-button').click(function() {
+                if (!validationErrorMoved) {
+                    $('.swatch-attribute').each(function() {
+                        var attrId = $(this).attr('attribute-id');
+                        var validationElement = $('input[name="super_attribute['+attrId+']"]').get(0);
+                        $(validationElement).appendTo(this);
+                    });
+                    validationErrorMoved = true;
+                }
+            });
+        });
+    });
+</script> 
+<?php 
+	/* 09-08-2017 LS: Code ends here. */ 
+?>

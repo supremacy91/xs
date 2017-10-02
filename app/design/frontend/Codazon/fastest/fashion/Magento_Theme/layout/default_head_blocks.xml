@@ -11,5 +11,6 @@
 		
 		<css src="css/fontawesome/font-awesome.css" media="all" />
 		<css src="css/fontpeicon/pe-icon-7-stroke.css" media="all" />
+		<css src="css/customcss/styles.css" media="all" />
     </head>
 </page>

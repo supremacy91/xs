@@ -42,6 +42,9 @@
 					<container name="main.menu" htmlTag="div" htmlClass="header-main-menu" after="-" />
 					<container name="menu.container" htmlTag="div" htmlClass="menu-container" label="Header Main Menu" />					
 				</container>
+				<container name="header.bottom.usps" htmlTag="div" htmlClass="usp-container">
+					<block class="Magento\Framework\View\Element\Template" name="header_usps" template="Magento_Theme::html/usps.phtml" />
+				</container>
 			</container>
 			</container>
 		</referenceContainer>
