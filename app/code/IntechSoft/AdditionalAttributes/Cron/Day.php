@@ -25,10 +25,12 @@ class Day
 
 
     public function __construct(\Psr\Log\LoggerInterface $logger,
-       \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+       \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+       \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productCollectionFactory
     ) {
         $this->_logger = $logger;
         $this->_scopeConfig = $scopeConfig;
+        $this->_productCollectionFactory = $productCollectionFactory;
     }
 
     public function execute() {
@@ -38,7 +40,8 @@ class Day
 
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         if($checkTypeReindex == 1){
-            $productCollection = $objectManager->create('Magento\Catalog\Model\ResourceModel\Product\Collection');
+           // $productCollection = $objectManager->create('Magento\Catalog\Model\ResourceModel\Product\Collection');
+            $productCollection = $this->_productCollectionFactory->create();
         } else {
             /** @var /Magento\Catalog\Model\ResourceModel\Product\Collection $productCollection */
             $productCollection = $objectManager->create('Magento\Catalog\Model\ResourceModel\Product\Collection');
