@@ -2,6 +2,6 @@
 
 \Magento\Framework\Component\ComponentRegistrar::register(
     \Magento\Framework\Component\ComponentRegistrar::MODULE,
-    'IntechSoft_DebugModule',
+    'IntechSoft_Discount',
     __DIR__
 );
