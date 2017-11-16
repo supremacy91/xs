@@ -72,8 +72,7 @@ class Image extends Generic implements TabInterface
         } else {
             $fieldset->addField('filename', 'file', array(
                 'label' => __('Manufacture Logo'),
-                'class' => 'required-entry',
-                'required' => true,
+                'required' => false,
                 'name' => 'filename',
                 'note' => 'Brand image dimension must be greater than equal to ' . $upload_dimension[0] . 'px width and ' . $upload_dimension[1] . 'px height',
                 'after_element_html' => $this->_coreRegistry->registry('manufacturer_grid')->getData('filename') != "" ? '<span class="hint"><img src="' . $this->helperData->getImageUrl($this->_coreRegistry->registry('manufacturer_grid')->getData('filename')) . '" width="25" height="25" name="manufacturer_image" style="vertical-align: middle;" /></span>' : '',

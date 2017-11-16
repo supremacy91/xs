@@ -40,13 +40,14 @@
                            value="<?php /* @escapeNotVerified */ echo $helper->getEscapedQueryText() ?>"
                            placeholder="<?php /* @escapeNotVerified */ echo __('Search entire store here...'); ?>"
                            class="input-text"
-						   onfocus="this.placeholder = ''" 
-						   onblur="this.placeholder = '<?php /* @escapeNotVerified */ echo __('Search entire store here...'); ?>'"
+			    onfocus="this.placeholder = ''" 
+			    onblur="this.placeholder = '<?php /* @escapeNotVerified */ echo __('Search entire store here...'); ?>'"
                            maxlength="<?php /* @escapeNotVerified */ echo $helper->getMaxQueryLength();?>"
                            role="combobox"
                            aria-haspopup="false"
                            aria-autocomplete="both"
-                           autocomplete="off"/>
+                           autocomplete="off" />
+						
 						<div id="search_autocomplete" class="search-autocomplete"></div>
 						<?php echo $block->getChildHtml() ?>
 					</div>

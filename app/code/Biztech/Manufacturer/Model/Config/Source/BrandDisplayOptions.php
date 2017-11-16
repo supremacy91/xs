@@ -12,6 +12,8 @@ class BrandDisplayOptions implements \Magento\Framework\Option\ArrayInterface
         $options = [
             ['value' => 0,
                 'label' => __('Logo and Name')],
+            ['value' => 1,
+                'label' => __('Only Name')],
             ['value' => 2,
                 'label' => __('Only Logo')]
         ];

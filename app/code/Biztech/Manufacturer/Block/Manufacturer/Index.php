@@ -19,6 +19,7 @@ class Index extends BaseBlock
         $this->_config = $context->getConfig();
         $this->_collection = $context->getManufacturerHelper()->getManufacturerCollection();
         $this->setCollection($this->_collection);
+        
     }
 
     public function _construct() {
@@ -41,26 +42,27 @@ class Index extends BaseBlock
         parent::_prepareLayout();
 
         $toolbar = $this->getToolbarBlock();
-
         $collection = $this->getCollection();
+      
+
 
         if ($orders = $this->getAvailableOrders()) {
             $toolbar->setAvailableOrders($orders);
         }
-        if ($sort = $this->getSortBy()) {
-            $toolbar->setDefaultOrder($sort);
-        }
         if ($dir = $this->getDefaultDirection()) {
             $toolbar->setDefaultDirection($dir);
         }
+        /*print_r($toolbar->getData());
+        die();*/
         $toolbar->setCollection($collection);
+        if ($toolbar->getData('_current_grid_direction')=='asc') {
+            $collection->setOrder('manufacturer_name','ASC');
+        } else if ($toolbar->getData('_current_grid_direction')=='desc') {
+            $collection->setOrder('manufacturer_name','DESC');
+        }
         //product_list_toolbar_pager
         $this->setChild('toolbar', $toolbar);
-        
-        
-
-
-        $pager = $this->getLayout()->createBlock('Magento\Theme\Block\Html\Pager');
+        /*$pager = $this->getLayout()->createBlock('Magento\Theme\Block\Html\Pager');
         // $pager = $this->getLayout()->getBlock('product_list_toolbar_pager');
 
         $pager->setCollection($collection)
@@ -68,7 +70,7 @@ class Index extends BaseBlock
 
         $pager->setCollection( $this->getCollection() )->setShowPerPage(1);
         $this->setChild('manufacturer_list_toolbar_pager', $pager);
-        $this->getCollection()->load();
+        $this->getCollection()->load();*/
         return $this;
     }
 
@@ -113,6 +115,7 @@ class Index extends BaseBlock
             }
         }
         $block = $this->getLayout()->createBlock($this->_defaultToolbarBlock, uniqid(microtime()));
+        $block->setData('_current_limit', 'ALL');
         return $block;
     }
 

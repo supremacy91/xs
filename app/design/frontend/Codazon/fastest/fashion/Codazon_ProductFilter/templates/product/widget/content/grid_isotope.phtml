@@ -5,6 +5,8 @@ use Magento\Framework\App\Action\Action;
 <?php
 $_productCollection = $block->getProductCollection();
 $_helper = $this->helper('Magento\Catalog\Helper\Output');
+
+
 ?>
 <?php if (!$_productCollection->count()): ?>
     <div class="message info empty"><div><?php /* @escapeNotVerified */ echo __('We can\'t find products matching the selection.') ?></div></div>

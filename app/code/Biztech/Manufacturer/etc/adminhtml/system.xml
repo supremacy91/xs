@@ -200,6 +200,11 @@
                         <field id="manufacturer_list_enabled">1</field>
                     </depends>
                 </field>
+                <field id="manufacturer_pager_limit" translate="label" type="text" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Pager Size</label>
+                    <comment><![CDATA[Set limit of merkens at the merken page".]]></comment>
+                </field>
+
 
                 <!-- <field id="brandlist_update" translate="label" type="button" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Clear Cache</label>

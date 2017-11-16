@@ -54,3 +54,7 @@
   #manufacturer_content h3, .manufacturer_brand_logo { text-align: center; }
   .product-manufacturer-logo { text-align: center; }
 }
+
+
+/* customization */
+.manufacturer-collection .products.products-grid {padding: 18px 0;margin-bottom: 18px;border-bottom: 1px solid #000;}

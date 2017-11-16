@@ -114,7 +114,10 @@ class ProductsList extends \Magento\CatalogWidget\Block\Product\ProductsList
             ->addStoreFilter()
             ->setPageSize($this->getPageSize())
             ->setCurPage($this->getRequest()->getParam(self::PAGE_VAR_NAME, 1));
-
+		$collection->getSelect()->where('price_index.final_price >= price_index.price');
+		$collection->getSelect()->where('`stock_status_index`.`stock_status` > 0');
+		//echo $collection->getSelect();
+		//exit;
         $conditions = $this->getConditions();
         $conditions->collectValidatedAttributes($collection);
         $this->sqlBuilder->attachConditionToCollection($collection, $conditions);

@@ -503,7 +503,7 @@ To,Aan,module,Magento_Bundle
 "* Required Fields","* Verplichte velden",module,Magento_Bundle
 "Your Customization","Uw aanpassing",module,Magento_Bundle
 Availability,Beschikbaarheid,module,Magento_Bundle
-"In stock","Op voorraad",module,Magento_Bundle
+"In stock","Beperkt op voorraad",module,Magento_Bundle
 "Out of stock","Niet op voorraad",module,Magento_Bundle
 Summary,Samenvatting,module,Magento_Bundle
 Availability:,Beschikbaarheid:,module,Magento_Bundle
@@ -566,7 +566,7 @@ Always,Altijd,module,Magento_Captcha
 "No Backorders","Geen backorders",module,Magento_CatalogInventory
 "Allow Qty Below 0","Aantal onder 0 toestaan",module,Magento_CatalogInventory
 "Allow Qty Below 0 and Notify Customer","Aantal onder 0 toestaan en klant inlichten",module,Magento_CatalogInventory
-"In Stock","Op voorraad",module,Magento_CatalogInventory
+"In Stock","Beperkt op voorraad",module,Magento_CatalogInventory
 "Out of Stock","Niet op voorraad",module,Magento_CatalogInventory
 "Unable to save Stock Item","Kan Stock item niet opslaan",module,Magento_CatalogInventory
 "Stock Item with id ""%1"" does not exist.","Voorraadproduct met id ""%1"" bestaat niet.",module,Magento_CatalogInventory
@@ -678,8 +678,8 @@ name,naam,module,Magento_CatalogSearch
 "Product Attribute",Product-attribuut,module,Magento_CatalogWidget
 SKU,Art.nr.,module,Magento_CatalogWidget
 "Please choose a condition to add.","Kies een voorwaarde om toe te voegen.",module,Magento_CatalogWidget
-"Add to Cart","In Winkelwagen",module,Magento_CatalogWidget
-"In stock","Op voorraad",module,Magento_CatalogWidget
+"Add to Cart","In Winkelmandje",module,Magento_CatalogWidget
+"In stock","Beperkt op voorraad",module,Magento_CatalogWidget
 "Out of stock","Niet op voorraad",module,Magento_CatalogWidget
 "Add to Wish List","Voeg toe aan verlanglijst",module,Magento_CatalogWidget
 "Add to Compare","Toevoegen om te vergelijken",module,Magento_CatalogWidget
@@ -1009,7 +1009,7 @@ Disabled,Uitgeschakeld,module,Magento_Catalog
 "The configuration item option instance in options group is incorrect.","Het configuratie productoptie instantie in de optie groep is onjuist.",module,Magento_Catalog
 "The configuration item instance in options group is incorrect.","Het configuratie product instantie in de opties groep is onjuist.",module,Magento_Catalog
 "The BuyRequest instance in options group is incorrect.","De BuyRequest instantie in opties groep is onjuist.",module,Magento_Catalog
-"We can't add the product to the cart because of an option validation issue.","Het product kan niet aan de winkelwagen toe gevoegd worden, vanwege een optie validatie probleem.",module,Magento_Catalog
+"We can't add the product to the cart because of an option validation issue.","Het product kan niet aan het winkelmandje toe gevoegd worden, vanwege een optie validatie probleem.",module,Magento_Catalog
 "%1 doesn't extends \Magento\Catalog\Model\Product\Option\Type\DefaultType","%1 breidt \Magento\Catalog\Model\Product\Option\Type\DefaultType niet uit",module,Magento_Catalog
 "The file options format is not valid.","De bestandsindeling van de opties is niet geldig.",module,Magento_Catalog
 "The file '%1' for '%2' has an invalid extension.","Het bestand '%1' voor '%2' heeft een ongeldige extensie.",module,Magento_Catalog
@@ -1147,7 +1147,7 @@ Qty,Aantal,module,Magento_Catalog
 "Enable Qty Increments","Activeer opklimmende aantallen",module,Magento_Catalog
 "Qty Increments","Opklimmend aantal",module,Magento_Catalog
 "Stock Availability","Beschikbaarheid voorraad",module,Magento_Catalog
-"In Stock","Op voorraad",module,Magento_Catalog
+"In Stock","Beperkt op voorraad",module,Magento_Catalog
 "Out of Stock","Niet op voorraad",module,Magento_Catalog
 "Add Product To Websites","Product aan websites toevoegen",module,Magento_Catalog
 "Remove Product From Websites","Product van websites verwijderen",module,Magento_Catalog
@@ -1193,8 +1193,8 @@ Role,Rol,module,Magento_Catalog
 "Compare Products","Producten vergelijken",module,Magento_Catalog
 "Print This Page","Print deze pagina",module,Magento_Catalog
 "Remove Product","Product verwijderen",module,Magento_Catalog
-"Add to Cart","In Winkelwagen",module,Magento_Catalog
-"In stock","Op voorraad",module,Magento_Catalog
+"Add to Cart","In Winkelmandje",module,Magento_Catalog
+"In stock","Beperkt op voorraad",module,Magento_Catalog
 "Out of stock","Niet op voorraad",module,Magento_Catalog
 "Add to Wish List","Toevoegen aan verlanglijst",module,Magento_Catalog
 "You have no items to compare.","Geen producten geselecteerd.",module,Magento_Catalog
@@ -1258,15 +1258,15 @@ Manually,Handmatig,module,Magento_CheckoutAgreements
 "Unable to save checkout agreement %1","Betalingsovereenkomst %1 opslaan is niet mogelijk",module,Magento_CheckoutAgreements
 "Unable to remove checkout agreement %1","Betalingsovereenkomst %1 verwijderen is niet mogelijk",module,Magento_CheckoutAgreements
 "Checkout agreement with specified ID ""%1"" not found.","Betalingsovereenkomst met het opgegeven kenmerk %1 niet gevonden.",module,Magento_CheckoutAgreements
-"Shopping Cart",Winkelwagen,module,Magento_Checkout
+"Shopping Cart",Winkelmandje,module,Magento_Checkout
 "Invalid method: %1","Ongeldige methode: %1",module,Magento_Checkout
 City,Plaats,module,Magento_Checkout
 Country,Land,module,Magento_Checkout
 State/Province,Staat/provincie,module,Magento_Checkout
 "Zip/Postal Code",Postcode,module,Magento_Checkout
-"My Cart (1 item)","Winkelwagen (1 product)",module,Magento_Checkout
-"My Cart (%1 items)","Winkelwagen (%1 producten)",module,Magento_Checkout
-"My Cart",Winkelwagen,module,Magento_Checkout
+"My Cart (1 item)","Winkelmandje (1 product)",module,Magento_Checkout
+"My Cart (%1 items)","Winkelmandje (%1 producten)",module,Magento_Checkout
+"My Cart",Winkelmandje,module,Magento_Checkout
 "For delivery questions.","Voor vragen over de aflevering.",module,Magento_Checkout
 "Customer is already registered","Klant is al geregistreerd",module,Magento_Checkout
 "Your session has expired","Uw sessie is verlopen",module,Magento_Checkout
@@ -1322,7 +1322,7 @@ Message,Bericht,module,Magento_Checkout
 "Enter discount code","Voer kortingscode in",module,Magento_Checkout
 "Apply Discount","Korting doorvoeren",module,Magento_Checkout
 "Cancel Coupon","Kortingscode annuleren",module,Magento_Checkout
-"Shopping Cart Items","Producten in winkelwagen",module,Magento_Checkout
+"Shopping Cart Items","Producten in winkelmandje",module,Magento_Checkout
 Item,Product,module,Magento_Checkout
 Price,Prijs,module,Magento_Checkout
 Qty,Aantal,module,Magento_Checkout
@@ -2151,7 +2151,7 @@ SKU,Art.nr.,module,Magento_Downloadable
 "Select all","Alles selecteren",module,Magento_Downloadable
 "Unselect all","Selectie ongedaan maken",module,Magento_Downloadable
 Availability,Beschikbaarheid,module,Magento_Downloadable
-"In stock","Op voorraad",module,Magento_Downloadable
+"In stock","Beperkt op voorraad",module,Magento_Downloadable
 "Out of stock","Niet op voorraad",module,Magento_Downloadable
 "Go to <a href=""%1"">My Downloadable Products</a>","Ga naar <a href=""%1"">Downloads</a>",module,Magento_Downloadable
 "Downloadable Products",Download-producten,module,Magento_Downloadable
@@ -2491,7 +2491,7 @@ Qty,Aantal,module,Magento_GroupedProduct
 "Default Qty",Standaard-aantal,module,Magento_GroupedProduct
 "Starting at",Vanaf,module,Magento_GroupedProduct
 Availability,Beschikbaarheid,module,Magento_GroupedProduct
-"In stock","Op voorraad",module,Magento_GroupedProduct
+"In stock","Beperkt op voorraad",module,Magento_GroupedProduct
 "Grouped product items","Gegroepeerde productitems",module,Magento_GroupedProduct
 "Export Settings","Export Instellingen",module,Magento_ImportExport
 "Entity Type","Eenheid Type",module,Magento_ImportExport
@@ -2758,7 +2758,7 @@ Synchronizing...,Synchroniseren...,module,Magento_MediaStorage
 "To see product price, add this item to your cart. You can always remove it later.","Om de prijs van het product te zien, voeg dit product toe aan uw winkelwagen. U kunt het later altijd verwijderen.",module,Magento_Msrp
 "See price before order confirmation.","Bekijk prijs voor bestelbevestiging.",module,Magento_Msrp
 "On Gesture","Op gebaar",module,Magento_Msrp
-"In Cart","In winkelwagen",module,Magento_Msrp
+"In Cart","In winkelmandje",module,Magento_Msrp
 "Before Order Confirmation","Voorafgaand aan orderbevestiging",module,Magento_Msrp
 "Use config","Gebruik configuratie",module,Magento_Msrp
 "Click for price","Klik voor de prijs",module,Magento_Msrp
@@ -2767,7 +2767,7 @@ Synchronizing...,Synchroniseren...,module,Magento_MediaStorage
 "You will see the order total before you submit the order.","Je ziet het besteltotaal voordat je de bestelling verstuurd.",module,Magento_Msrp
 Price,Prijs,module,Magento_Msrp
 "Actual Price","Werkelijke prijs",module,Magento_Msrp
-"Add to Cart","In Winkelwagen",module,Magento_Msrp
+"Add to Cart","In Winkelmandje",module,Magento_Msrp
 "Change Billing Address","Verander Factuuradres",module,Magento_Multishipping
 "Ship to Multiple Addresses","Verzenden naar meerdere adressen",module,Magento_Multishipping
 "Billing Information - %1","Factuuradres - %1",module,Magento_Multishipping
@@ -3267,7 +3267,7 @@ Create...,Aanmaken...,module,Magento_Paypal
 Edit,Bewerken,module,Magento_Paypal
 "Buy now with PayPal","Nu kopen met PayPal",module,Magento_Paypal
 "Edit Payment Information","Betalingsgegevens bewerken",module,Magento_Paypal
-"Items in Your Shopping Cart","Producten in uw winkelwagen",module,Magento_Paypal
+"Items in Your Shopping Cart","Producten in uw winkelmandje",module,Magento_Paypal
 "Edit Shopping Cart","Winkelwagen bewerken",module,Magento_Paypal
 "Place Order","Plaats bestelling",module,Magento_Paypal
 "Submitting order information...","Informatie van de bestelling wordt opgeslagen...",module,Magento_Paypal
@@ -3510,7 +3510,7 @@ Coupons,Kortingsbonnen,module,Magento_Reports
 "Orders Report","Orders rapport",module,Magento_Reports
 "Shipping Report","Verzending verslag",module,Magento_Reports
 "Tax Report","Fiscaal verslag",module,Magento_Reports
-"Shopping Cart",Winkelwagen,module,Magento_Reports
+"Shopping Cart",Winkelmandje,module,Magento_Reports
 "Abandoned Carts","Achtergelaten winkelwagens",module,Magento_Reports
 "Customer Shopping Carts","Winkelwagens van klant",module,Magento_Reports
 "Products in Carts","Producten in winkelwagen",module,Magento_Reports
@@ -3539,8 +3539,8 @@ Error,Foutmelding,module,Magento_Reports
 "Show Report For:","Toon rapport voor:",module,Magento_Reports
 "All Websites","Alle Websites",module,Magento_Reports
 "Recently Viewed","Recent bekeken",module,Magento_Reports
-"Add to Cart","In Winkelwagen",module,Magento_Reports
-"In stock","Op voorraad",module,Magento_Reports
+"Add to Cart","In Winkelmandje",module,Magento_Reports
+"In stock","Beperkt op voorraad",module,Magento_Reports
 "Out of stock","Niet op voorraad",module,Magento_Reports
 "Add to Wish List","Voeg toe aan verlanglijst",module,Magento_Reports
 "Add to Compare","Toevoegen om te vergelijken",module,Magento_Reports
@@ -3865,7 +3865,7 @@ Quantity,Aantal,module,Magento_Sales
 "Shipping Address",Afleveradres,module,Magento_Sales
 "Shipping Method",Verzendmethode,module,Magento_Sales
 "Update Changes","Wijzigingen bijwerken",module,Magento_Sales
-"Shopping Cart",Winkelwagen,module,Magento_Sales
+"Shopping Cart",Winkelmandje,module,Magento_Sales
 "Are you sure you want to delete all items from shopping cart?","Weet u er zeker dat u alle producten wilt verwijderen uit de winkelwagen?",module,Magento_Sales
 "Clear Shopping Cart","Leeg winkelwagen",module,Magento_Sales
 "Products in Comparison List","Producten in vergelijk-lijst",module,Magento_Sales
@@ -4411,7 +4411,7 @@ Close,Sluiten,module,Magento_Sales
 "View All","Bekijk alles",module,Magento_Sales
 "Gift Message for This Order","Kadobericht voor deze bestelling",module,Magento_Sales
 "Recently Ordered","Recent besteld",module,Magento_Sales
-"Add to Cart","In winkelwagen",module,Magento_Sales
+"Add to Cart","In winkelmandje",module,Magento_Sales
 Search,Zoek,module,Magento_Sales
 "Search Term",Zoekterm,module,Magento_Search
 Results,Resultaten,module,Magento_Search
@@ -5481,9 +5481,9 @@ error-message,foutbericht,module,Magento_Wishlist
 "Add to Wish List","Voeg toe aan verlanglijst",module,Magento_Wishlist
 "View Product","Product bekijken",module,Magento_Wishlist
 Qty,Aantal,module,Magento_Wishlist
-"Add to Cart","In Winkelwagen",module,Magento_Wishlist
+"Add to Cart","In Winkelmandje",module,Magento_Wishlist
 Availability,Beschikbaarheid,module,Magento_Wishlist
-"In stock","Op voorraad",module,Magento_Wishlist
+"In stock","Beperkt op voorraad",module,Magento_Wishlist
 "Out of stock","Niet op voorraad",module,Magento_Wishlist
 Edit,Bewerken,module,Magento_Wishlist
 "Remove Item","Product verwijderen",module,Magento_Wishlist

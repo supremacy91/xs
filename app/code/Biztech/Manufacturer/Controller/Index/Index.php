@@ -9,7 +9,6 @@ use Magento\Framework\View\Result\PageFactory;
 
 class Index extends \Magento\Framework\App\Action\Action
 {
-
     /**
      * @var \Magento\Framework\App\Cache\TypeListInterface
      */
@@ -29,6 +28,9 @@ class Index extends \Magento\Framework\App\Action\Action
      * @var \Magento\Framework\View\Result\PageFactory
      */
     protected $resultPageFactory;
+    protected $_storeManager;
+    protected $_manutext;
+    protected $_manuHelper;
 
 
     public function __construct(
@@ -36,7 +38,7 @@ class Index extends \Magento\Framework\App\Action\Action
         TypeListInterface $cacheTypeList,
         StateInterface $cacheState,
         Pool $cacheFrontendPool,
-        PageFactory $resultPageFactory
+        \Magento\Framework\View\Result\PageFactory $resultPageFactory
     )
     {
         parent::__construct($context);
@@ -45,11 +47,7 @@ class Index extends \Magento\Framework\App\Action\Action
         $this->_cacheFrontendPool = $cacheFrontendPool;
         $this->resultPageFactory = $resultPageFactory;
     }
-
-    /**
-     * Flush cache storage
-     *
-     */
+    
     public function execute()
     {
         $this->resultPage = $this->resultPageFactory->create();

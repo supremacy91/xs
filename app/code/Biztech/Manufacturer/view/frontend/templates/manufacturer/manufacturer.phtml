@@ -4,9 +4,12 @@ if( $this->getHelper()->isEnabled() ) : ?>
 $is_toolbar = $this->getConfig()->getCurrentStoreConfigValue('manufacturer/pagination_settings/add_toolbar_brand_list');
 if( $is_toolbar ){
 	$_manufacturerCollection = $this->getCollection();
+
+
 } else {
 	$_manufacturerCollection = $this->getCollection();
 }
+
 
 if (!$_manufacturerCollection->count()) :
 	?>
@@ -38,7 +41,7 @@ if (!$_manufacturerCollection->count()) :
 	foreach ($alphas as $key) {
 		if( in_array(strtolower($key), $_manufacturerInitials) ){
 			$class = '';
-			if( $key == 'A' )
+ 			if( $key == 'A' )
 				$class = 'first';
 			$nav[$key] = array(
 				'class' => $class,
@@ -53,21 +56,21 @@ if (!$_manufacturerCollection->count()) :
 	}
 
 	?>
-	<div class="alphabet">
+	<!-- <div class="alphabet"> -->
 		<?php
 		// echo $navigation;
-		foreach ($nav as $key => $value) {
+		/*foreach ($nav as $key => $value) {
 			echo '<a class="'.$value['class'].'" href="javascript:void(0)">'.$key.'</a>';
-		}
+		}*/
 		?>
-		<a class="last active" href="javascript:void(0)">All</a>
-	</div>
+		<!-- <a class="last active" href="javascript:void(0)">All</a>
+	</div> -->
 
 	<div class="manufacturer-collection">
 		<?php
 		if( $is_toolbar ) {
-			echo $block->getToolbarHtml();
-			echo $block->getAdditionalHtml();
+		/*	echo $block->getToolbarHtml();
+			echo $block->getAdditionalHtml();*/
 
 			if ($block->getMode() == 'grid') {
 				$viewMode = 'grid';
@@ -90,11 +93,25 @@ if (!$_manufacturerCollection->count()) :
 		}
 		?>
 
+		
 		<div class="products wrapper <?php /* @escapeNotVerified */ echo $viewMode; ?> products-<?php /* @escapeNotVerified */ echo $viewMode; ?>">
+			<h2><?php echo __('Dames-Heren Merken') ?></h2>
+			<?php if (count($_manufacturerCollection->addFieldToFilter('manufacturer_name', array('nlike' => '%KIDS'))) != 0){ ?>
 			<?php $iterator = 1; ?>
+			<?php $pager = 0; ?>
 			<ol id="manufacturer-list" class="products list items product-items">
 				<?php /** @var $_product \Magento\Catalog\Model\Product */ ?>
-				<?php foreach ($_manufacturerCollection as $_manufacturer): ?>
+				<?php $pagerConfig = !empty($this->getConfig()->getCurrentStoreConfigValue('manufacturer/manufacturer_brand_list/manufacturer_pager_limit')) ? $this->getConfig()->getCurrentStoreConfigValue('manufacturer/manufacturer_brand_list/manufacturer_pager_limit') : 20;
+				?>
+				<?php foreach ($_manufacturerCollection as $_manufacturer):
+				if (substr(strtolower($_manufacturer->getManufacturerName()), -4)=='kids') {
+					continue;
+				}
+    			if ($pager >= $pagerConfig) {
+					continue;
+				}
+    		 	$pager++;
+				 ?>
 					<?php /* @escapeNotVerified */ echo($iterator++ == 1) ? '<li class="item product product-item">' : '</li><li class="item product product-item">' ?>
 					<div class="product-item-info" data-container="product-grid">
 						<?php
@@ -110,6 +127,8 @@ if (!$_manufacturerCollection->count()) :
 
 							<a class="product photo product-item-photo" tabindex="-1" href="<?php echo trim($this->getManufacturerUrl($_manufacturer), '/') ?>">
 								<?php
+								// $imageUrl= is_file($imageUrl) ? $imageUrl : $this->_storeConfig->getValue('catalog/placeholder/small_image_placeholder');
+								$this->getUrl("Magento_Catalog::images/product/placeholder/{$this->getDestinationSubdir()}.jpg");
 								echo $this->getLayout()->createBlock('\Magento\Framework\View\Element\Template')
 								->setManufacturerImage($imageUrl)
 								->setManufacturerName($_manufacturer->getBrandName())
@@ -139,12 +158,110 @@ if (!$_manufacturerCollection->count()) :
 			<?php endforeach; ?>
 		</ol>
 
-	</div>
+				<button type="button" title="<?php echo __('View More') ?>" class="button login primary" onclick="
+		window.location.href = '<?php echo $this->getUrl('merken/dames-heren-merken'); ?>'
+			"><span><span><?php echo __('View More') ?></span></span></button>
+
+			<?php } else{ ?>
+				<h2> No Dames-Heren Products Found</h2>		
+			<?php } ?>
+</div>
 	<?php
-	if( $is_toolbar ){
+	/*if( $is_toolbar ){
 		echo $block->getToolbarHtml();
 		echo $block->getPagerHtml();
-	}
+	}*/
+	?>
+
+
+		<div class="products wrapper <?php /* @escapeNotVerified */ echo $viewMode; ?> products-<?php /* @escapeNotVerified */ echo $viewMode; ?>">
+			<h2><?php echo __('Kinder Merken') ?></h2>
+<?php if (count($_manufacturerCollection->addFieldToFilter('manufacturer_name', array('like' => '%KIDS'))) != 0){ ?>
+			<?php $iterator = 1; ?>
+			<?php $pager = 0; ?>
+			<ol id="manufacturer-list" class="products list items product-items">
+				<?php /** @var $_product \Magento\Catalog\Model\Product */ ?>
+				<?php 
+
+				// $_manufacturerCollection->addFieldToFilter('manufacturer_name', array('nlike' => '%KIDS')); 
+				// $_manufacturerCollectionNonKids = $_manufacturerCollection->addFieldToFilter('manufacturer_name', array('like' => '%KIDS')); 
+				 ?>
+
+				<?php 
+				
+				$pagerConfig = !empty($this->getConfig()->getCurrentStoreConfigValue('manufacturer/manufacturer_brand_list/manufacturer_pager_limit')) ? $this->getConfig()->getCurrentStoreConfigValue('manufacturer/manufacturer_brand_list/manufacturer_pager_limit') : 20;
+
+ 			   	foreach ($_manufacturerCollection as $_manufacturer):
+					if (!(substr(strtolower($_manufacturer->getManufacturerName()), -4)=='kids')) {
+					continue;
+					}
+
+					if ($pager >= $pagerConfig) {
+						continue;
+					}
+	    		 	$pager++;
+				 ?>
+
+					<?php /* @escapeNotVerified */ echo($iterator++ == 1) ? '<li class="item product product-item">' : '</li><li class="item product product-item">' ?>
+					<div class="product-item-info" data-container="product-grid">
+						<?php
+						if ($pos != null) {
+							$position = ' style="left:' . $productImage->getWidth() . 'px;'
+							. 'top:' . $productImage->getHeight() . 'px;"';
+						}
+						$imageUrl = $this->getHelper()->getImageUrl($_manufacturer->getFilename(), 'large_thumb');
+						if( $imageUrl &&
+							($this->getConfig()->getCurrentStoreConfigValue('manufacturer/manufacturer_brand_list/manufacturer_display_logo_name') == 0 || $this->getConfig()->getCurrentStoreConfigValue('manufacturer/manufacturer_brand_list/manufacturer_display_logo_name') == 2 )
+							) :
+							?>
+
+							<a class="product photo product-item-photo" tabindex="-1" href="<?php echo trim($this->getManufacturerUrl($_manufacturer), '/') ?>">
+								<?php
+								// $imageUrl= is_file($imageUrl) ? $imageUrl : $this->_storeConfig->getValue('catalog/placeholder/small_image_placeholder');
+								echo $this->getLayout()->createBlock('\Magento\Framework\View\Element\Template')
+								->setManufacturerImage($imageUrl)
+								->setManufacturerName($_manufacturer->getBrandName())
+								->setManufacturerConfig($this->getConfig())
+								->setImageType('large_thumb')
+								->setTemplate('Biztech_Manufacturer::manufacturer/manufacturer_resize.phtml')
+								->toHtml();
+
+
+								?>
+							</a>
+						<?php endif;
+						if( $this->getConfig()->getCurrentStoreConfigValue('manufacturer/manufacturer_brand_list/manufacturer_display_logo_name') == 0 || $this->getConfig()->getCurrentStoreConfigValue('manufacturer/manufacturer_brand_list/manufacturer_display_logo_name') == 1 ) :
+							?>
+						<div class="product-shop">
+							<div class="f-fix">
+								<h2 class="product-name">
+									<a href="<?php echo trim($this->getManufacturerUrl($_manufacturer), '/') ?>">
+										<?php echo $_manufacturer->getBrandName() ?>
+									</a>
+								</h2>
+							</div>
+						</div>
+					<?php endif; ?>
+				</div>
+				<?php echo($iterator == count($_manufacturerCollection) + 1) ? '</li>' : '' ?>
+			<?php endforeach; ?>
+		</ol>
+		<button type="button" title="<?php echo __('View More') ?>" class="button login primary" onclick="
+		window.location.href = '<?php echo $this->getUrl('merken/kindermerken'); ?>'
+			"><span><span><?php echo __('View More') ?></span></span></button>
+
+			<?php } else{ ?>
+				<h2> No Kider Products Found</h2>		
+			<?php } ?>
+
+
+	</div>
+
+	<?php
+/*	if( $is_toolbar ){
+		echo $block->getToolbarHtml();
+		echo $block->getPagerHtml();
+	}*/
 	?>
 </div>
 <?php endif; ?>

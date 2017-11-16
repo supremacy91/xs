@@ -22,7 +22,8 @@ class Ajax extends BaseBlock
         parent::__construct($context);
         $this->_helper = $context->getManufacturerHelper();
         $this->_config = $context->getConfig();
-        $this->_collection = $context->getManufacturerHelper()->getManufacturerCollection();
+        $this->_collection = $context->getManufacturerHelper()->getManufacturerCollection()
+             ->addFieldToFilter('manufacturer_name', array('like' => '%KIDS'));
         $this->setCollection($this->newCollection());
     }
 
@@ -112,6 +113,12 @@ class Ajax extends BaseBlock
         }
         $toolbar->setCollection($collection);
 
+        if ($toolbar->getData('_current_grid_direction')=='asc') {
+            $collection->setOrder('manufacturer_name','ASC');
+        } else if ($toolbar->getData('_current_grid_direction')=='desc') {
+            $collection->setOrder('manufacturer_name','DESC');
+        }
+        
         $this->setChild('toolbar', $toolbar);
         $this->getCollection()->load();
         if ($this->getCollection()) {
@@ -136,6 +143,7 @@ class Ajax extends BaseBlock
             }
         }
         $block = $this->getLayout()->createBlock($this->_defaultToolbarBlock, uniqid(microtime()));
+        $block->setData('_current_limit', 'ALL');
         return $block;
     }
 

@@ -182,10 +182,17 @@ class Import extends AbstractModel
             $this->_importHelper->setAttributeSet($this->importSettings['attribute_set']);
         }
         if ($dataAfter = $this->_importHelper->prepareData($dataBefore)){
+//			echo "<pre>";
+//			print_r($dataBefore);
+//			echo "\n-----\n";
+//			print_r($dataAfter);
+//			exit;
             $dataAfterConfigurable = $this->_importHelper->prepareDataConfigurable($dataBefore);
             $this->_preparedCsvFile = $this->_importCsv;
+	     
             array_shift($dataAfterConfigurable);
             $dataAfter = array_merge($dataAfter, $dataAfterConfigurable);
+	    
             $this->csvProcessor->saveData($this->_preparedCsvFile, $dataAfter);
         } else {
             $this->_errorMessage = self::PREPARE_DATA_PROCESS_ERROR ;
@@ -243,6 +250,7 @@ class Import extends AbstractModel
             $data[$importModel::FIELD_FIELD_SEPARATOR]
         );
 
+	
         $validationResult = $importModel->validateSource($source);
         $errorAggregator = $importModel->getErrorAggregator();
         $this->successMessages;
@@ -277,6 +285,10 @@ class Import extends AbstractModel
          * Starting Import Process
          */
         if ($importModel->getProcessedRowsCount() && $validationResult && $importModel->isImportAllowed()) {
+			
+			//echo "111---";
+			//echo $this->_importHelper->getColumnImdexByName('brand_2');
+			//exit;
 
             $importResult = $importModel->importSource();
             if (!$importResult) {

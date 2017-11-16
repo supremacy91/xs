@@ -73,7 +73,7 @@ class Day
         $this->_urlRegenerateHelper = $urlRegenerate;
         //$this->_logger = $logger;
 
-        $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/test.log');
+        $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/day_cron.log');
         $this->_logger = new \Zend\Log\Logger();
         $this->_logger->addWriter($writer);
     }
@@ -103,13 +103,31 @@ class Day
             $i++;
 
             $importedFileName = $importDir . '/' . $file;
+	    //$importedFileName = "/data/web/magento2/var/import/cron/day/bigsync-201711150100078.csv";
+	   // echo "Imported File name ". $importedFileName."\n";
+	    
+	    
             $this->_logger->info('$importedFileName - '.$importedFileName);
             $importModel = $this->_importModel->create();
+	   
             $importModel->setCsvFile($importedFileName, true)->process();
 
             if (count($importModel->errors) == 0) {
                 $this->_logger->info(self::SUCCESS_MESSAGE . $file);
-                unlink($importDir. '/' .$file);
+		
+		/*** Moved to import History***/
+		 $src = $importedFileName;
+		    $archiveName = "completed_".date('YmdHis') . "_" . $file;
+		    $dest =$this->_directoryList->getPath(DirectoryList::VAR_DIR)."/import_history/".$archiveName;	    
+		    $r = rename($src, $dest);
+		    if($r){
+			$this->_logger->info('Moved to import history');
+		    }
+		/*** Moved to import History***/ 
+		
+		
+		
+               // unlink($importDir. '/' .$file);
                 $this->_urlRegenerateHelper->regenerateUrl();
             } else {
                 foreach ($importModel->errors as $error) {

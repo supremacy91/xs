@@ -19,11 +19,11 @@
     	<referenceContainer name="header-wrapper">
             <block class="Biztech\Manufacturer\Block\Manufacturer\Form" name="top.search" as="topSearch" template="Biztech_Manufacturer::manufacturer/search/form.mini.phtml" />
         </referenceContainer>
-		<referenceContainer name="sidebar.main">
+		<!-- <referenceContainer name="sidebar.main">
 			<block class="Biztech\Manufacturer\Block\Manufacturer\Index" name="manufacturer_sidebar" as="manufacturer.sidebar" template="Biztech_Manufacturer::manufacturer/manufacturer_sidebar.phtml" />
 		</referenceContainer>
 		<referenceContainer name="sidebar.additional">
             <block class="Biztech\Manufacturer\Block\Manufacturer\Index" name="manufacturer_sidebar" as="manufacturer.sidebar" template="Biztech_Manufacturer::manufacturer/manufacturer_sidebar.phtml"/>
-        </referenceContainer>
+        </referenceContainer> -->
 	</body>
 </page>

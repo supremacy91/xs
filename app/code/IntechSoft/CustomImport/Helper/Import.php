@@ -103,7 +103,7 @@ class Import extends AbstractHelper
 
         return $data;
     }
-
+ 
     public function prepareDataConfigurable($data)
     {
         $this->headers = $this->getCsvHeaders($data[0]);
@@ -153,7 +153,7 @@ class Import extends AbstractHelper
                     if($this->headers[$i] == 'sku') {
                         $preparedItems[] = $this->prepareItem((int)$item[$i], $this->headers[$i]);
                     } else {
-                        $preparedItems[] = $this->prepareItem($item[$i], $this->headers[$i]);
+                        $preparedItems[] = @$this->prepareItem($item[$i], $this->headers[$i]);
                     }
                 }
             }
@@ -164,6 +164,7 @@ class Import extends AbstractHelper
         $convertedData = $this->checkNameAttribute($convertedData);
         $convertedData = $this->checkUrlKeyAttribute($convertedData);
         $convertedData = $this->addDefaultCategory($convertedData);
+        $convertedData = $this->addExtraBrand2($convertedData);
 
         return $convertedData;
     }
@@ -239,7 +240,7 @@ class Import extends AbstractHelper
         } else {
             $encodedData = mb_convert_encoding($data, 'UTF-8', 'Windows-1251');
         }
-
+	
         return $encodedData;
     }
 
@@ -363,6 +364,19 @@ class Import extends AbstractHelper
             ->Where('cpe.sku IN (?)', array_values($urlKey)));
     }
 
+    public function addExtraBrand2($convertedData) {
+			
+		$brandColumnIndex = $this->getColumnImdexByName('brand');
+		$brandColumnIndex_2 = $this->getColumnImdexByName('brand_2');
+		if($brandColumnIndex_2 <= 0) {
+			$convertedData[0][] = 'brand_2';
+			for($i = 1; $i < count($convertedData); $i++)
+			{
+				$convertedData[$i][] = $convertedData[$i][$brandColumnIndex];
+			}
+		}
+		return $convertedData;
+	}
     public function addDefaultCategory($convertedData)
     {
         $defaultCategoryColumnIndex = $this->getColumnImdexByName('default_category');
@@ -412,7 +426,14 @@ class Import extends AbstractHelper
         $convertedItem = $this->encodToEncodUtf8($convertedItem);
         $convertedItem = str_replace(',', '.', $convertedItem);
         $convertedItem = str_replace('|', ',', $convertedItem);
-
+	// replace Microsoft Word version of single  and double quotations marks (“ ” ‘ ’) with  regular quotes (' and ")
+	// previously it was causing "ERROR: Curly quotes used instead of straight quotes" error
+	//$convertedItem = iconv('UTF-8', 'ASCII//TRANSLIT', $convertedItem); 
+	$convertedItem = str_replace(chr(145), "'", $convertedItem);   
+	$convertedItem = str_replace(chr(146), "'", $convertedItem);  
+	$convertedItem = str_replace(chr(147), '"', $convertedItem);   
+	$convertedItem = str_replace(chr(148), '"', $convertedItem); 
+	  
         if ($column == 'categories') {
             $convertedItem = str_replace(' > ', '/', $convertedItem);
             $convertedItem = $this->rootCategory . '/' . $convertedItem;
@@ -532,6 +553,7 @@ class Import extends AbstractHelper
         $convertedData = $this->checkNameAttribute($convertedData);
         $convertedData = $this->checkUrlKeyAttribute($convertedData);
         $convertedData = $this->addDefaultCategory($convertedData);
+        $convertedData = $this->addExtraBrand2($convertedData);
 
         return $convertedData;
     }
