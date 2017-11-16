@@ -97,7 +97,7 @@ class Day
                 if($productSpecialPriceStartDate!=null){
                     $startTime = $this->dateToSeconds($productSpecialPriceStartDate);
                 }
-               
+
                 $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 
 
