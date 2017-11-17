@@ -10,6 +10,10 @@ namespace IntechSoft\AdditionalAttributes\Cron;
  * @version     1.0.1
  */
 
+/**
+ * Class Day
+ * @package IntechSoft\AdditionalAttributes\Cron
+ */
 class Day
 {
     const XML_PATH_REINDEX_TYPE = 'intechsoft/basic/enabled';
@@ -22,18 +26,22 @@ class Day
     const XML_PATH_SALE_CATEGORY_ID = 'intechsoft/basic/salecategoryid';
     protected $_scopeConfig;
     protected $_logger;
+    protected $_discount;
 
 
     public function __construct(\Psr\Log\LoggerInterface $logger,
        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-       \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productCollectionFactory
+       \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productCollectionFactory,
+       \IntechSoft\Discount\Model\Discount $discount
     ) {
         $this->_logger = $logger;
         $this->_scopeConfig = $scopeConfig;
         $this->_productCollectionFactory = $productCollectionFactory;
+        $this->_discount = $discount;
     }
 
-    public function execute() {
+    public function execute()
+    {
         $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
 
         $checkTypeReindex = $this->_scopeConfig->getValue(self::XML_PATH_REINDEX_TYPE, $storeScope);
@@ -89,30 +97,9 @@ class Day
                 if($productSpecialPriceStartDate!=null){
                     $startTime = $this->dateToSeconds($productSpecialPriceStartDate);
                 }
-                $paramForSave = self::MAXTIMEVALUE;
-                $paramForSaveIsForSale = 1;
-
 
                 $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 
-                /*$attributeInfo = $objectManager->get(\Magento\Eav\Model\Entity\Attribute::class)
-                    ->loadByCode(self::ENTITYTYPE, self::ATTRIBUTECODE);
-
-                $attributeId = $attributeInfo->getAttributeId();
-                $attributeOptionAll = $objectManager->get(\Magento\Eav\Model\ResourceModel\Entity\Attribute\Option\Collection::class)
-                    ->setPositionOrder('asc')
-                    ->setAttributeFilter($attributeId)
-                    ->setStoreFilter()
-                    ->load();
-
-                $isForSaleOptionId = '';
-                foreach ($attributeOptionAll as $attributeOption){
-                    $optionLabelValue = $attributeOption->getData('default_value');
-                    if($optionLabelValue == self::FORSALEOPTION){
-                        $isForSaleOptionId = $attributeOption->getId();
-                        break;
-                    }
-                }*/
 
                 if($productSpecialPriceFinishDate == null && $productSpecialPriceStartDate == null){
                     $paramForSave = self::MAXTIMEVALUE;
@@ -160,38 +147,8 @@ class Day
             $productForSaveOne->setData('sorting_new_sale', $paramForSave);
             $productForSaveOne->getResource()->saveAttribute($productForSaveOne, 'sorting_new_sale');
 
+            $this->_discount->execute();
 
-            $discountData = $productForSave->getData('discount');
-            $saleValue = '';
-            if($discountData == 'New Collection'){
-                $saleValue = self::ATTRIBUTECODE_NOTSALE_VALUE;
-            } else if($discountData == 'Sale'){
-                $saleValue = self::ATTRIBUTECODE_SALE_VALUE;
-            } else {
-                $saleValue = self::ATTRIBUTECODE_NOTSALE_VALUE;
-            }
-            $attributeInfo = $objectManager->get(\Magento\Eav\Model\Entity\Attribute::class)
-                ->loadByCode(self::ENTITYTYPE, self::ATTRIBUTECODE);
-
-            $attributeId = $attributeInfo->getAttributeId();
-            $attributeOptionAll = $objectManager->get(\Magento\Eav\Model\ResourceModel\Entity\Attribute\Option\Collection::class)
-                ->setPositionOrder('asc')
-                ->setAttributeFilter($attributeId)
-                ->load();
-
-            $isForSaleOptionId = '';
-            foreach ($attributeOptionAll as $attributeOption){
-                $optionLabelValue = $attributeOption->getData('default_value');
-                if($optionLabelValue == $saleValue){
-                    $isForSaleOptionId = $attributeOption->getId();
-                    break;
-                }
-            }
-
-            $productForSaveTwo = '';
-            $productForSaveTwo = $objectManager->get('\Magento\Catalog\Model\Product')->load($productId);
-            $productForSaveTwo->setData(self::ATTRIBUTECODE, $isForSaleOptionId);
-            $productForSaveTwo->getResource()->saveAttribute($productForSaveTwo, self::ATTRIBUTECODE);
         }
 
     }
