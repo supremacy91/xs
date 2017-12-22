@@ -7,13 +7,11 @@
 
 namespace Amasty\Base\Helper;
 
-use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\Helper\AbstractHelper;
-use \Magento\Framework\Unserialize\Unserialize;
-use Zend\Http\Client\Adapter\Curl as CurlClient;
-use Zend\Uri\Http as HttpUri;
-use Zend\Http\Response as HttpResponse;
 use SimpleXMLElement;
+use Zend\Http\Client\Adapter\Curl as CurlClient;
+use Zend\Http\Response as HttpResponse;
+use Zend\Uri\Http as HttpUri;
 
 class Module extends AbstractHelper
 {
@@ -21,9 +19,9 @@ class Module extends AbstractHelper
     const URL_EXTENSIONS  = 'http://amasty.com/feed-extensions-m2.xml';
 
     /**
-     * @var Unserialize
+     * @var \Amasty\Base\Model\Serializer
      */
-    protected $unserialize;
+    protected $serializer;
     /**
      * @var CurlClient
      */
@@ -34,22 +32,29 @@ class Module extends AbstractHelper
     protected $cache;
 
     /**
+     * @var array
+     */
+    protected $restrictedModules = [
+        'Amasty_CommonRules'
+    ];
+
+    /**
      * Module constructor.
      * @param \Magento\Framework\App\Helper\Context $context
-     * @param Unserialize $unserialize
+     * @param \Amasty\Base\Model\Serializer $serializer
      * @param \Magento\Framework\App\CacheInterface $cache
      * @param CurlClient $curl
      */
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
-        Unserialize $unserialize,
+        \Amasty\Base\Model\Serializer $serializer,
         \Magento\Framework\App\CacheInterface $cache,
         CurlClient $curl
     ) {
         parent::__construct($context);
 
-        $this->_cache = $cache;
-        $this->unserialize = $unserialize;
+        $this->cache = $cache;
+        $this->serializer = $serializer;
         $this->curlClient = $curl;
     }
 
@@ -59,13 +64,12 @@ class Module extends AbstractHelper
      */
     public function getAllExtensions()
     {
-        $result = $this->unserialize->unserialize($this->_cache->load(self::EXTENSIONS_PATH));
-
-        if (!$result)
-        {
-            $this->_reload();
-            $result = $this->unserialize->unserialize($this->_cache->load(self::EXTENSIONS_PATH));
+        $serialized = $this->cache->load(self::EXTENSIONS_PATH);
+        if ($serialized === false) {
+            $this->reload();
+            $serialized = $this->cache->load(self::EXTENSIONS_PATH);
         }
+        $result = $this->serializer->unserialize($serialized);
 
         return $result;
     }
@@ -73,28 +77,27 @@ class Module extends AbstractHelper
     /**
      * Save extensions data to magento cache
      */
-    protected function _reload()
+    protected function reload()
     {
-        $feedData   = array();
-        $feedXml = $this->_getFeedData();
-        if ($feedXml && $feedXml->channel && $feedXml->channel->item) 
-        {
+        $feedData = [];
+        $feedXml = $this->getFeedData();
+        if ($feedXml && $feedXml->channel && $feedXml->channel->item) {
             foreach ($feedXml->channel->item as $item) {
                 $code = (string)$item->code;
 
-                if (!isset($feedData[$code])){
-                    $feedData[$code] = array();
+                if (!isset($feedData[$code])) {
+                    $feedData[$code] = [];
                 }
 
-                $feedData[$code][(string)$item->title] = array(
+                $feedData[$code][(string)$item->title] = [
                     'name'    => (string)$item->title,
                     'url'     => (string)$item->link,
                     'version' => (string)$item->version,
-                );
+                ];
             }
 
-            if ($feedData)  {
-                $this->_cache->save($this->serialize($feedData), self::EXTENSIONS_PATH);
+            if ($feedData) {
+                $this->cache->save($this->serialize($feedData), self::EXTENSIONS_PATH);
             }
         }
     }
@@ -103,7 +106,7 @@ class Module extends AbstractHelper
      * Read data from xml file with curl
      * @return bool|SimpleXMLElement
      */
-    protected function _getFeedData()
+    protected function getFeedData()
     {
         try {
             $curlClient = $this->getCurlClient();
@@ -111,9 +114,9 @@ class Module extends AbstractHelper
             $location = self::URL_EXTENSIONS;
             $uri = new HttpUri($location);
 
-            $curlClient->setOptions(array(
+            $curlClient->setOptions([
                 'timeout'   => 8
-            ));
+            ]);
 
             $curlClient->connect($uri->getHost(), $uri->getPort());
             $curlClient->write('GET', $uri, 1.0);
@@ -122,8 +125,7 @@ class Module extends AbstractHelper
             $curlClient->close();
 
             $xml  = new SimpleXMLElement($data->getContent());
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
 
@@ -145,6 +147,14 @@ class Module extends AbstractHelper
 
     public function serialize($data)
     {
-        return serialize($data);
+        return $this->serializer->serialize($data);
+    }
+
+    /**
+     * @return array
+     */
+    public function getRestrictedModules()
+    {
+        return $this->restrictedModules;
     }
 }

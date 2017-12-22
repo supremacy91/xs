@@ -5,25 +5,32 @@
  * @package Amasty_Base
  */
 
+
 namespace Amasty\Base\Block;
 
 use Magento\Framework\Data\Form\Element\AbstractElement;
-use Magento\Framework\Json\DecoderInterface;
 
 class Info extends \Magento\Config\Block\System\Config\Form\Fieldset
 {
     /**
      * @var \Magento\Framework\View\LayoutFactory
      */
-    protected $_layoutFactory;
+    private $_layoutFactory;
+    
     /**
      * @var \Magento\Framework\App\State
      */
-    protected $appState;
+    private $appState;
+    
     /**
      * @var \Magento\Cron\Model\ResourceModel\Schedule\CollectionFactory
      */
-    protected $cronFactory;
+    private $cronFactory;
+
+    /**
+     * @var \Magento\Framework\App\Filesystem\DirectoryList
+     */
+    private $directoryList;
 
     public function __construct(
         \Magento\Backend\Block\Context $context,
@@ -31,6 +38,7 @@ class Info extends \Magento\Config\Block\System\Config\Form\Fieldset
         \Magento\Framework\View\Helper\Js $jsHelper,
         \Magento\Framework\View\LayoutFactory $layoutFactory,
         \Magento\Cron\Model\ResourceModel\Schedule\CollectionFactory $cronFactory,
+        \Magento\Framework\App\Filesystem\DirectoryList $directoryList,
         \Magento\Framework\App\State $appState,
         array $data = []
     ) {
@@ -40,6 +48,7 @@ class Info extends \Magento\Config\Block\System\Config\Form\Fieldset
         $this->_scopeConfig   = $context->getScopeConfig();
         $this->appState = $appState;
         $this->cronFactory = $cronFactory;
+        $this->directoryList = $directoryList;
     }
 
     /**
@@ -52,8 +61,9 @@ class Info extends \Magento\Config\Block\System\Config\Form\Fieldset
     {
         $html = $this->_getHeaderHtml($element);
 
-        $html .= $this->_getMagentoMode($element);
-        $html .= $this->_getCronInfo($element);
+        $html .= $this->getMagentoMode($element);
+        $html .= $this->getMagentoPathInfo($element);
+        $html .= $this->getCronInfo($element);
 
         $html .= $this->_getFooterHtml($element);
 
@@ -63,13 +73,13 @@ class Info extends \Magento\Config\Block\System\Config\Form\Fieldset
     /**
      * @return \Magento\Framework\View\Element\BlockInterface
      */
-    protected function _getFieldRenderer()
+    private function _getFieldRenderer()
     {
         if (empty($this->_fieldRenderer)) {
             $layout = $this->_layoutFactory->create();
 
             $this->_fieldRenderer = $layout->createBlock(
-                'Magento\Config\Block\System\Config\Form\Field'
+                \Magento\Config\Block\System\Config\Form\Field::class
             );
         }
 
@@ -79,17 +89,34 @@ class Info extends \Magento\Config\Block\System\Config\Form\Fieldset
     /**
      * @return mixed
      */
-    protected function _getMagentoMode($fieldset)
+    private function getMagentoMode($fieldset)
     {
         $label = __("Magento Mode");
         $mode = $this->appState->getMode();
         $mode = ucfirst($mode);
 
-        $field = $fieldset->addField('magento_mode', 'label', array(
+        $field = $fieldset->addField('magento_mode', 'label', [
             'name'  => 'dummy',
             'label' => $label,
             'value' => $mode,
-        ))->setRenderer($this->_getFieldRenderer());
+        ])->setRenderer($this->_getFieldRenderer());
+
+        return $field->toHtml();
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getMagentoPathInfo($fieldset)
+    {
+        $label = __("Magento Path");
+        $path = $this->directoryList->getRoot();
+
+        $field = $fieldset->addField('magento_path', 'label', [
+            'name'  => 'magento_path',
+            'label' => $label,
+            'value' => $path,
+        ])->setRenderer($this->_getFieldRenderer());
 
         return $field->toHtml();
     }
@@ -98,19 +125,20 @@ class Info extends \Magento\Config\Block\System\Config\Form\Fieldset
      * @param $fieldset
      * @return mixed
      */
-    protected function _getCronInfo($fieldset) {
+    private function getCronInfo($fieldset)
+    {
         $crontabCollection = $this->cronFactory->create();
         $crontabCollection->getSelect()->order('schedule_id', 'desc')->limit(5);
 
-        if ($crontabCollection->count() === 0){
+        if ($crontabCollection->count() === 0) {
             $value = '<div class="red">';
             $value .= __('No cron jobs found') . "</div>";
             $value .=
-                "<a target='_blank' href='https://support.amasty.com/index.php?/Knowledgebase/Article/View/72/24/magento-cron'>" .
+                "<a target='_blank'
+                  href='https://support.amasty.com/index.php?/Knowledgebase/Article/View/72/24/magento-cron'>" .
                 __("Learn more") .
                 "</a>";
-        }
-        else {
+        } else {
             $value = '<table>';
             foreach ($crontabCollection as $crontabRow) {
                 $value .=
@@ -125,11 +153,11 @@ class Info extends \Magento\Config\Block\System\Config\Form\Fieldset
 
         $label = __('Cron (Last 5)');
 
-        $field = $fieldset->addField('cron_configuration', 'label', array(
+        $field = $fieldset->addField('cron_configuration', 'label', [
             'name'  => 'dummy',
             'label' => $label,
             'after_element_html' => $value,
-        ))->setRenderer($this->_getFieldRenderer());
+        ])->setRenderer($this->_getFieldRenderer());
 
         return $field->toHtml();
     }

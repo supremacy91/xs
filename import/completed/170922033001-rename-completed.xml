@@ -1,0 +1,620 @@
+<?xml version="1.0"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:html="http://www.w3.org/TR/REC-html40">
+ <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
+  <LastAuthor>Microsoft Office-gebruiker</LastAuthor>
+  <Created>2017-09-22T13:14:29Z</Created>
+  <LastSaved>2017-09-22T13:14:30Z</LastSaved>
+  <Version>15.0</Version>
+ </DocumentProperties>
+ <OfficeDocumentSettings xmlns="urn:schemas-microsoft-com:office:office">
+  <AllowPNG/>
+  <PixelsPerInch>96</PixelsPerInch>
+  <Colors>
+   <Color>
+    <Index>2</Index>
+    <RGB>#FF0000</RGB>
+   </Color>
+   <Color>
+    <Index>3</Index>
+    <RGB>#00FF00</RGB>
+   </Color>
+   <Color>
+    <Index>4</Index>
+    <RGB>#0000FF</RGB>
+   </Color>
+   <Color>
+    <Index>5</Index>
+    <RGB>#FFFF00</RGB>
+   </Color>
+   <Color>
+    <Index>6</Index>
+    <RGB>#FF00FF</RGB>
+   </Color>
+   <Color>
+    <Index>7</Index>
+    <RGB>#00FFFF</RGB>
+   </Color>
+   <Color>
+    <Index>8</Index>
+    <RGB>#800000</RGB>
+   </Color>
+   <Color>
+    <Index>9</Index>
+    <RGB>#008000</RGB>
+   </Color>
+   <Color>
+    <Index>10</Index>
+    <RGB>#000080</RGB>
+   </Color>
+   <Color>
+    <Index>11</Index>
+    <RGB>#808000</RGB>
+   </Color>
+   <Color>
+    <Index>12</Index>
+    <RGB>#800080</RGB>
+   </Color>
+   <Color>
+    <Index>16</Index>
+    <RGB>#9999FF</RGB>
+   </Color>
+   <Color>
+    <Index>17</Index>
+    <RGB>#993366</RGB>
+   </Color>
+   <Color>
+    <Index>18</Index>
+    <RGB>#FFFFCC</RGB>
+   </Color>
+   <Color>
+    <Index>19</Index>
+    <RGB>#CCFFFF</RGB>
+   </Color>
+   <Color>
+    <Index>20</Index>
+    <RGB>#660066</RGB>
+   </Color>
+   <Color>
+    <Index>21</Index>
+    <RGB>#FF8080</RGB>
+   </Color>
+   <Color>
+    <Index>22</Index>
+    <RGB>#0066CC</RGB>
+   </Color>
+   <Color>
+    <Index>23</Index>
+    <RGB>#CCCCFF</RGB>
+   </Color>
+   <Color>
+    <Index>24</Index>
+    <RGB>#000080</RGB>
+   </Color>
+   <Color>
+    <Index>25</Index>
+    <RGB>#FF00FF</RGB>
+   </Color>
+   <Color>
+    <Index>26</Index>
+    <RGB>#FFFF00</RGB>
+   </Color>
+   <Color>
+    <Index>27</Index>
+    <RGB>#00FFFF</RGB>
+   </Color>
+   <Color>
+    <Index>28</Index>
+    <RGB>#800080</RGB>
+   </Color>
+   <Color>
+    <Index>29</Index>
+    <RGB>#800000</RGB>
+   </Color>
+   <Color>
+    <Index>30</Index>
+    <RGB>#008080</RGB>
+   </Color>
+   <Color>
+    <Index>31</Index>
+    <RGB>#0000FF</RGB>
+   </Color>
+   <Color>
+    <Index>54</Index>
+    <RGB>#F0F0F0</RGB>
+   </Color>
+   <Color>
+    <Index>55</Index>
+    <RGB>#A0A0A0</RGB>
+   </Color>
+  </Colors>
+ </OfficeDocumentSettings>
+ <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
+  <WindowHeight>14460</WindowHeight>
+  <WindowWidth>18960</WindowWidth>
+  <WindowTopX>480</WindowTopX>
+  <WindowTopY>460</WindowTopY>
+  <TabRatio>600</TabRatio>
+  <ProtectStructure>False</ProtectStructure>
+  <ProtectWindows>False</ProtectWindows>
+ </ExcelWorkbook>
+ <Styles>
+  <Style ss:ID="Default" ss:Name="Normal">
+   <Alignment ss:Vertical="Bottom"/>
+   <Borders/>
+   <Font/>
+   <Interior/>
+   <NumberFormat/>
+   <Protection/>
+  </Style>
+  <Style ss:ID="s63">
+   <Alignment ss:Horizontal="Left" ss:Vertical="Top" ss:WrapText="1"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#A0A0A0"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#A0A0A0"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#A0A0A0"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#A0A0A0"/>
+   </Borders>
+   <Font ss:FontName="Tahoma" x:CharSet="1" ss:Size="8"/>
+   <Interior ss:Color="#F0F0F0" ss:Pattern="Solid"/>
+   <NumberFormat/>
+   <Protection/>
+  </Style>
+  <Style ss:ID="s64">
+   <Alignment ss:Horizontal="Left" ss:Vertical="Top" ss:WrapText="1"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#A0A0A0"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#A0A0A0"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#A0A0A0"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#A0A0A0"/>
+   </Borders>
+   <Font ss:FontName="Tahoma" x:CharSet="1" ss:Size="8"/>
+   <Interior/>
+   <NumberFormat/>
+   <Protection/>
+  </Style>
+  <Style ss:ID="s65">
+   <Alignment ss:Horizontal="Left" ss:Vertical="Top" ss:WrapText="1"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#A0A0A0"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#A0A0A0"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#A0A0A0"/>
+   </Borders>
+   <Font ss:FontName="Tahoma" x:CharSet="1" ss:Size="8"/>
+   <Interior ss:Color="#F0F0F0" ss:Pattern="Solid"/>
+   <NumberFormat/>
+   <Protection/>
+  </Style>
+  <Style ss:ID="s66">
+   <Alignment ss:Horizontal="Left" ss:Vertical="Top" ss:WrapText="1"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#A0A0A0"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#A0A0A0"/>
+   </Borders>
+   <Font ss:FontName="Tahoma" x:CharSet="1" ss:Size="8"/>
+   <Interior ss:Color="#F0F0F0" ss:Pattern="Solid"/>
+   <NumberFormat/>
+   <Protection/>
+  </Style>
+  <Style ss:ID="s67">
+   <Alignment ss:Horizontal="Left" ss:Vertical="Top" ss:WrapText="1"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#A0A0A0"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#A0A0A0"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#A0A0A0"/>
+   </Borders>
+   <Font ss:FontName="Tahoma" x:CharSet="1" ss:Size="8"/>
+   <Interior ss:Color="#F0F0F0" ss:Pattern="Solid"/>
+   <NumberFormat/>
+   <Protection/>
+  </Style>
+  <Style ss:ID="s68">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Top" ss:WrapText="1"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#A0A0A0"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#A0A0A0"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#A0A0A0"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#A0A0A0"/>
+   </Borders>
+   <Font ss:FontName="Tahoma" x:CharSet="1" ss:Size="8"/>
+   <Interior ss:Color="#F0F0F0" ss:Pattern="Solid"/>
+   <NumberFormat/>
+   <Protection/>
+  </Style>
+ </Styles>
+ <Worksheet ss:Name="Lijst 18 DS ACC FW2017 gemaakt ">
+  <Table ss:ExpandedColumnCount="7" ss:ExpandedRowCount="39" x:FullColumns="1"
+   x:FullRows="1" ss:DefaultColumnWidth="53">
+   <Column ss:AutoFitWidth="0" ss:Width="81"/>
+   <Column ss:AutoFitWidth="0" ss:Width="108"/>
+   <Column ss:Index="5" ss:AutoFitWidth="0" ss:Width="50"/>
+   <Column ss:AutoFitWidth="0" ss:Width="99"/>
+   <Column ss:AutoFitWidth="0" ss:Width="79"/>
+   <Row ss:AutoFitHeight="0" ss:Height="14">
+    <Cell ss:MergeAcross="6" ss:StyleID="s68"><Data ss:Type="String">Lijst 18 DS ACC FW2017 gemaakt op 2017-09-20-merk DKNY ect</Data></Cell>
+   </Row>
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Referentie</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Omschrijving</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">JPEG</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Kleur</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Barcode</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Naam Sectie</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Naam Merk</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="23">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">D1605JD/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Overknielaars</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4101.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">BLAUWSUEDE</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">00526323</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">LAARZEN</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">CALEXIS</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="23">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">D1605JD/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Overknielaars</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4102.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">BLAUWSUEDE</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">00526323</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">LAARZEN</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">CALEXIS</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="23">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">D1605JD/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Overknielaars</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4103.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">BLAUWSUEDE</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">00526323</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">LAARZEN</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">CALEXIS</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">D1605JD/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Overknielaars</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4105.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">ZWART</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">0052636</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">LAARZEN</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">CALEXIS</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">D1605JD/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Overknielaars</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4106.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">ZWART</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">0052636</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">LAARZEN</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">CALEXIS</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">D1605JD/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Overknielaars</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4109.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">ZWART</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">0052636</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">LAARZEN</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">CALEXIS</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="23">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">D1605JD/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Overknielaars</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4110.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">GRIJSSUEDE</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">00526338</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">LAARZEN</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">CALEXIS</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="23">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">D1605JD/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Overknielaars</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4112.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">GRIJSSUEDE</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">00526338</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">LAARZEN</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">CALEXIS</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="23">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">D1605JD/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Overknielaars</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4113.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">GRIJSSUEDE</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">00526338</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">LAARZEN</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">CALEXIS</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">JA15303/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Enkelsneaker Hart</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4114.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">ZWART</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">0044455</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">SNEAKERS</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">LOVE MOSCHINO</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">JA15303/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Enkelsneaker Hart</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4115.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">ZWART</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">0044455</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">SNEAKERS</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">LOVE MOSCHINO</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">JA15303/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Enkelsneaker Hart</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4116.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">ZWART</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">0044455</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">SNEAKERS</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">LOVE MOSCHINO</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">JA15303/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Enkelsneaker Hart</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4117.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">ZWART</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">0044455</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">SNEAKERS</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">LOVE MOSCHINO</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">K3101172/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Barbara Court Sneaker</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4118.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">BORDEAUX</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">0052626</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">SNEAKERS</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">DKNY</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">K3101172/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Barbara Court Sneaker</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4119.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">BORDEAUX</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">0052626</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">SNEAKERS</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">DKNY</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">K3101172/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Barbara Court Sneaker</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4120.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">BORDEAUX</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">0052626</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">SNEAKERS</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">DKNY</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">K3101172/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Barbara Court Sneaker</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4121.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">BORDEAUX</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">0052626</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">SNEAKERS</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">DKNY</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">K3105357/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Jadyn Slip On</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4123.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">BORDEAUX</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">0052613</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">SNEAKERS</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">DKNY</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">K3105357/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Jadyn Slip On</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4124.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">BORDEAUX</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">0052613</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">SNEAKERS</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">DKNY</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">K3105357/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Jadyn Slip On</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4125.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">BORDEAUX</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">0052613</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">SNEAKERS</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">DKNY</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">K3105357/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Jadyn Slip On</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4126.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">BORDEAUX</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">0052613</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">SNEAKERS</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">DKNY</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">K3101172/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Barbara Court Sneaker</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4127.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">GROEN</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">00526219</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">SNEAKERS</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">DKNY</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">K3101172/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Barbara Court Sneaker</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4128.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">GROEN</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">00526219</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">SNEAKERS</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">DKNY</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">K3101172/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Barbara Court Sneaker</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4129.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">GROEN</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">00526219</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">SNEAKERS</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">DKNY</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">K3101172/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Barbara Court Sneaker</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4130.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">GROEN</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">00526219</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">SNEAKERS</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">DKNY</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">JA15343/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Enkelsneaker Bont</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4131.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">ROZE</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">00444810</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">SNEAKERS</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">LOVE MOSCHINO</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">JA15343/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Enkelsneaker Bont</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4132.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">ROZE</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">00444810</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">SNEAKERS</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">LOVE MOSCHINO</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">JA15343/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Enkelsneaker Bont</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4133.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">ROZE</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">00444810</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">SNEAKERS</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">LOVE MOSCHINO</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">JA15343/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Enkelsneaker Bont</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4134.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">ROZE</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">00444810</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">SNEAKERS</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">LOVE MOSCHINO</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">1H20BE/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">GEM 8 Sneaker Velluto</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4135.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">ZWART</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">0052602</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">SNEAKERS</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">PINKO</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">1H20BE/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">GEM 8 Sneaker Velluto</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4136.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">ZWART</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">0052602</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">SNEAKERS</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">PINKO</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">1H20BE/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">GEM 8 Sneaker Velluto</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4137.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">ZWART</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">0052602</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">SNEAKERS</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">PINKO</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">1H20BE/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">GEM 8 Sneaker Velluto</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4138.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">ZWART</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">0052602</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">SNEAKERS</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">PINKO</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="23">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">1P210G/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Mini Love Stars</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4139.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">ZWART/ROOD</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">0052581</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">DAMES ACCESSOIRES</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">PINKO</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">1P210B/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Love Denim</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4141.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">BLAUW</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">0052571</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">DAMES ACCESSOIRES</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">PINKO</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="s64"><Data ss:Type="String">1P212E/9</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">Mini Love Jeans</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">IMG_4142.jpg</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">ZWART</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">0052591</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">DAMES ACCESSOIRES</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="String">PINKO</Data></Cell>
+   </Row>
+   <Row>
+    <Cell ss:StyleID="s65"/>
+    <Cell ss:StyleID="s66"/>
+    <Cell ss:StyleID="s66"/>
+    <Cell ss:StyleID="s66"/>
+    <Cell ss:StyleID="s66"/>
+    <Cell ss:StyleID="s66"/>
+    <Cell ss:StyleID="s67"/>
+   </Row>
+  </Table>
+  <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
+   <Zoom>160</Zoom>
+   <PageLayoutZoom>160</PageLayoutZoom>
+   <Selected/>
+   <DoNotDisplayGridlines/>
+   <TopRowVisible>33</TopRowVisible>
+   <Panes>
+    <Pane>
+     <Number>3</Number>
+     <ActiveRow>2</ActiveRow>
+     <ActiveCol>2</ActiveCol>
+     <RangeSelection>R3C3:R38C3</RangeSelection>
+    </Pane>
+   </Panes>
+   <ProtectObjects>False</ProtectObjects>
+   <ProtectScenarios>False</ProtectScenarios>
+  </WorksheetOptions>
+ </Worksheet>
+</Workbook>

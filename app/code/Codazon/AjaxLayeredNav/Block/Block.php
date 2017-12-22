@@ -94,4 +94,11 @@ class Block extends \Magento\Framework\View\Element\Js\Components
     {
         return $this->_registry->registry('current_category');
     }
+
+    public function toHtml()
+    {
+        if ($this->_request->getFullActionName() !== 'amasty_xlanding_page_view'){
+            return parent::toHtml();
+        }
+    }
 }

@@ -1,6 +1,4 @@
 <?php
-ini_set('max_execution_time', '700');
-
 /**
  * Public alias for the application entry point
  *

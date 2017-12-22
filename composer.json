@@ -8,7 +8,7 @@
         "AFL-3.0"
     ],
     "require": {
-        "magento/product-community-edition": "2.1.5",
+        "magento/product-community-edition": "2.1.9",
         "composer/composer": "@alpha",
         "mailchimp/mc-magento2": "^1.0"
     },
@@ -48,12 +48,16 @@
     },
     "minimum-stability": "alpha",
     "prefer-stable": true,
-    "repositories": [
-        {
+    "repositories": {
+        "0": {
             "type": "composer",
             "url": "https://repo.magento.com/"
+        },
+        "welpixel-m2-weltpixel-backend": {
+            "type": "git",
+            "url": "git@github.com:rusdragos/m2-weltpixel-backend.git"
         }
-    ],
+    },
     "extra": {
         "magento-force": "override"
     }

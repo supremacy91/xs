@@ -56,23 +56,28 @@ class Deploy extends AbstractHelper
 
         foreach ($files as $file) {
             $newFileName = $this->getNewFilePath(
-                $file, $fromPath, ltrim($toPath . '/' . $baseName, '/')
+                $file,
+                $fromPath,
+                ltrim($toPath . '/' . $baseName, '/')
             );
 
-            if ($this->rootRead->isExist($newFileName))
+            if ($this->rootRead->isExist($newFileName)) {
                 continue;
+            }
 
             if ($this->rootRead->isFile($file)) {
                 $this->rootWrite->copyFile($file, $newFileName);
 
                 $this->rootWrite->changePermissions(
-                    $newFileName, self::DEFAULT_FILE_PERMISSIONS
+                    $newFileName,
+                    self::DEFAULT_FILE_PERMISSIONS
                 );
             } elseif ($this->rootRead->isDirectory($file)) {
                 $this->rootWrite->create($newFileName);
 
                 $this->rootWrite->changePermissions(
-                    $newFileName, self::DEFAULT_DIR_PERMISSIONS
+                    $newFileName,
+                    self::DEFAULT_DIR_PERMISSIONS
                 );
             }
         }

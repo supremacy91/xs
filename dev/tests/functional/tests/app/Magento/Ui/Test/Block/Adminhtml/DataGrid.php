@@ -102,6 +102,7 @@ class DataGrid extends Grid
      */
     protected $rowById = ".//tr[td//input[@data-action='select-row' and @value='%s']]";
 
+    // @codingStandardsIgnoreStart
     /**
      * Column header number.
      *
@@ -114,7 +115,7 @@ class DataGrid extends Grid
      *
      * @var string
      */
-    protected $cellByHeader = "//td[%s+1]";
+    private $cellByHeader = "//td[count(//th[span[.='%s']][not(ancestor::*[@class='sticky-header'])]/preceding-sibling::th)+1]";
 
     // @codingStandardsIgnoreStart
     /**
@@ -345,10 +346,23 @@ class DataGrid extends Grid
     public function selectAction($action)
     {
         $actionType = is_array($action) ? key($action) : $action;
-        $this->getGridHeaderElement()->find($this->actionButton)->click();
-        $this->getGridHeaderElement()
-            ->find(sprintf($this->actionList, $actionType), Locator::SELECTOR_XPATH)
-            ->click();
+        // Find Action button (dropdown actually)
+        $actionButton = $this->getGridHeaderElement()->find($this->actionButton);
+        // Click it to show options (actions)
+        $actionButton->click();
+        // Find needed element (action) to click on
+        $actionElement = $this->getGridHeaderElement()
+            ->find(sprintf($this->actionList, $actionType), Locator::SELECTOR_XPATH);
+        // Scroll to show it (action option) on viewport. It can be out of viewport because of small window height.
+        $actionElement->hover();
+        // In case of small window after scroll to action element it may became hidden
+        // It because of appearance special top-stick panel of actions
+        // So we need to click action button again to show list of actions
+        if (!$actionElement->isVisible()) {
+            $actionButton->click();
+        }
+        // Click on action element to run appropriate command
+        $actionElement->click();
         if (is_array($action)) {
             $this->getGridHeaderElement()
                 ->find(sprintf($this->actionList, end($action)), Locator::SELECTOR_XPATH)

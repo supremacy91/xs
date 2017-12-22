@@ -79,6 +79,7 @@ class Extensions extends \Magento\Config\Block\System\Config\Form\Fieldset
         foreach ($modules as $moduleName) {
             if (strstr($moduleName, 'Amasty_') === false
                 || $moduleName === 'Amasty_Base'
+                || in_array($moduleName, $this->_moduleHelper->getRestrictedModules())
             ) {
                 continue;
             }
@@ -100,7 +101,7 @@ class Extensions extends \Magento\Config\Block\System\Config\Form\Fieldset
             $layout = $this->_layoutFactory->create();
 
             $this->_fieldRenderer = $layout->createBlock(
-                'Magento\Config\Block\System\Config\Form\Field'
+                \Magento\Config\Block\System\Config\Form\Field::class
             );
         }
 
@@ -132,7 +133,7 @@ class Extensions extends \Magento\Config\Block\System\Config\Form\Fieldset
     protected function _getFieldHtml($fieldset, $moduleCode)
     {
         $module = $this->_getModuleInfo($moduleCode);
-        if(!is_array($module)  ||
+        if (!is_array($module) ||
            !array_key_exists('version', $module) ||
            !array_key_exists('description', $module)
         ) {
@@ -148,14 +149,9 @@ class Extensions extends \Magento\Config\Block\System\Config\Form\Fieldset
              </a>';
 
         $allExtensions = $this->_moduleHelper->getAllExtensions();
-        if ($allExtensions && isset($allExtensions[$moduleCode])){
-            $ext = [];
-
-            if (is_array($allExtensions[$moduleCode]) && !array_key_exists('name', $allExtensions[$moduleCode])){
-                $ext = end($allExtensions[$moduleCode]);
-            } else {
-                $ext = $allExtensions[$moduleCode];
-            }
+        if ($allExtensions && isset($allExtensions[$moduleCode])) {
+            $singleRecord = array_key_exists('name', $allExtensions[$moduleCode]);
+            $ext = $singleRecord ? $allExtensions[$moduleCode] : end($allExtensions[$moduleCode]);
 
             $url     = $ext['url'];
             $name    = $ext['name'];
@@ -178,20 +174,21 @@ class Extensions extends \Magento\Config\Block\System\Config\Form\Fieldset
 
         // in case if module output disabled
         if ($this->_scopeConfig->getValue('advanced/modules_disable_output/' . $moduleCode)) {
+            $href = isset($url) ? ' href="' . $url . '"' : '';
             $status =
-                '<a href="' . $url . '" target="_blank">
-                        <img src="' . $this->getViewFileUrl('Amasty_Base::images/bad.gif') .
-                            '" alt="' . __("Output disabled") . '" title="'. __("Output disabled")
+                '<a' . $href . ' target="_blank">
+                    <img src="' . $this->getViewFileUrl('Amasty_Base::images/bad.gif') .
+                '" alt="' . __("Output disabled") . '" title="'. __("Output disabled")
                 .'"/></a>';
         }
 
         $moduleName = $status . ' ' . $moduleName;
 
-        $field = $fieldset->addField($moduleCode, 'label', array(
+        $field = $fieldset->addField($moduleCode, 'label', [
             'name'  => 'dummy',
             'label' => $moduleName,
             'value' => $currentVer,
-        ))->setRenderer($this->_getFieldRenderer());
+        ])->setRenderer($this->_getFieldRenderer());
 
         return $field->toHtml();
     }

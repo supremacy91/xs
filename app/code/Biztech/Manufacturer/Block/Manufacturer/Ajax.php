@@ -2,164 +2,150 @@
 namespace Biztech\Manufacturer\Block\Manufacturer;
 use Biztech\Manufacturer\Block\BaseBlock;
 use Biztech\Manufacturer\Block\Context;
-class Ajax extends BaseBlock
-{
-    protected $_defaultToolbarBlock = 'Magento\Catalog\Block\Product\ProductList\Toolbar';
-    protected $_defaultColumnCount = 3;
-    protected $_columnCountLayoutDepend = [];
-    protected $_collection;
-    protected $_helper;
-    protected $_config;
 
-    /**
-     * Ajax constructor.
-     * @param Context $context
-     */
-    public function __construct(
-        Context $context
-    )
-    {
-        parent::__construct($context);
-        $this->_helper = $context->getManufacturerHelper();
-        $this->_config = $context->getConfig();
-        $this->_collection = $context->getManufacturerHelper()->getManufacturerCollection()
-             ->addFieldToFilter('manufacturer_name', array('like' => '%KIDS'));
-        $this->setCollection($this->newCollection());
-    }
+class Ajax extends BaseBlock {
+	protected $_defaultToolbarBlock = 'Magento\Catalog\Block\Product\ProductList\Toolbar';
+	protected $_defaultColumnCount = 3;
+	protected $_columnCountLayoutDepend = [];
+	protected $_collection;
+	protected $_helper;
+	protected $_config;
 
-    protected function newCollection()
-    {
-        $char = $this->getRequest()->getParam('char');
+	/**
+	 * Ajax constructor.
+	 * @param Context $context
+	 */
+	public function __construct(
+		Context $context
+	) {
+		parent::__construct($context);
+		$this->_helper = $context->getManufacturerHelper();
+		$this->_config = $context->getConfig();
+		$this->_collection = $context->getManufacturerHelper()->getManufacturerCollection()
+			->addFieldToFilter('manufacturer_name', array('like' => '%KIDS'));
+		$this->setCollection($this->newCollection());
+	}
 
-        foreach ($this->_collection as $manufacturer) {
-            if ($char != 'All') {
-                if (strtolower(substr($manufacturer->getBrandName(), 0, 1)) != strtolower($char)) {
-                    $this->_collection->removeItemByKey($manufacturer->getManufacturerId());
-                }
-            }
-        }
-        $ids = [];
-        foreach ($this->_collection as $manufacturer) {
-            $ids[] = $manufacturer->getManufacturerId();
-        }
-        if (!sizeof($ids)) {
-            $ids = '';
-        }
+	protected function newCollection() {
+		$char = $this->getRequest()->getParam('char');
 
-        $newCollection = $this->getHelper()->getNewManufacturerCollection($ids);
+		foreach ($this->_collection as $manufacturer) {
+			if ($char != 'All') {
+				if (strtolower(substr($manufacturer->getBrandName(), 0, 1)) != strtolower($char)) {
+					$this->_collection->removeItemByKey($manufacturer->getManufacturerId());
+				}
+			}
+		}
+		$ids = [];
+		foreach ($this->_collection as $manufacturer) {
+			$ids[] = $manufacturer->getManufacturerId();
+		}
+		if (!sizeof($ids)) {
+			$ids = '';
+		}
 
-        return $newCollection;
+		$newCollection = $this->getHelper()->getNewManufacturerCollection($ids);
 
-    }
+		return $newCollection;
 
-    public function getHelper()
-    {
-        return $this->_helper;
-    }
+	}
 
-    public function _construct()
-    {
+	public function getHelper() {
+		return $this->_helper;
+	}
 
-        parent::_construct();
-    }
+	public function _construct() {
 
-    public function getConfig()
-    {
-        return $this->_config;
-    }
+		parent::_construct();
+	}
 
-    /**
-     * Retrieve current view mode
-     *
-     * @return string
-     */
-    public function getMode()
-    {
-        return $this->getChildBlock('toolbar')->getCurrentMode();
-    }
+	public function getConfig() {
+		return $this->_config;
+	}
 
-    public function getManufacturerUrl($manufacturer)
-    {
-        $url = $this->getUrl($manufacturer->getUrlKey(), []);
-        return $url;
-    }
+	/**
+	 * Retrieve current view mode
+	 *
+	 * @return string
+	 */
+	public function getMode() {
+		return $this->getChildBlock('toolbar')->getCurrentMode();
+	}
 
-    public function getToolbarHtml()
-    {
-        return $this->getChildHtml('toolbar');
-    }
+	public function getManufacturerUrl($manufacturer) {
+		$url = $this->getUrl('merken/' . $manufacturer->getUrlKey(), []);
+		return $url;
+	}
 
-    public function getPagerHtml()
-    {
-        return $this->getChildHtml('pager');
-    }
+	public function getToolbarHtml() {
+		return $this->getChildHtml('toolbar');
+	}
 
-    protected function _prepareLayout()
-    {
-        parent::_prepareLayout();
+	public function getPagerHtml() {
+		return $this->getChildHtml('pager');
+	}
 
-        $toolbar = $this->getToolbarBlock();
+	protected function _prepareLayout() {
+		parent::_prepareLayout();
 
-        $collection = $this->getCollection();
+		$toolbar = $this->getToolbarBlock();
 
-        if ($orders = $this->getAvailableOrders()) {
-            $toolbar->setAvailableOrders($orders);
-        }
-        if ($sort = $this->getSortBy()) {
-            $toolbar->setDefaultOrder($sort);
-        }
-        if ($dir = $this->getDefaultDirection()) {
-            $toolbar->setDefaultDirection($dir);
-        }
-        $toolbar->setCollection($collection);
+		$collection = $this->getCollection();
 
-        if ($toolbar->getData('_current_grid_direction')=='asc') {
-            $collection->setOrder('manufacturer_name','ASC');
-        } else if ($toolbar->getData('_current_grid_direction')=='desc') {
-            $collection->setOrder('manufacturer_name','DESC');
-        }
-        
-        $this->setChild('toolbar', $toolbar);
-        $this->getCollection()->load();
-        if ($this->getCollection()) {
-            $pager = $this->getLayout()->createBlock('Magento\Theme\Block\Html\Pager')->setCollection($this->getCollection());
-            $this->setChild('pager', $pager);
-        }
-        return $this;
-    }
+		if ($orders = $this->getAvailableOrders()) {
+			$toolbar->setAvailableOrders($orders);
+		}
+		if ($sort = $this->getSortBy()) {
+			$toolbar->setDefaultOrder($sort);
+		}
+		if ($dir = $this->getDefaultDirection()) {
+			$toolbar->setDefaultDirection($dir);
+		}
+		$toolbar->setCollection($collection);
 
-    /**
-     * Retrieve Toolbar block
-     *
-     * @return \Magento\Catalog\Block\Product\ProductList\Toolbar
-     */
-    public function getToolbarBlock()
-    {
-        $blockName = $this->getToolbarBlockName();
-        if ($blockName) {
-            $block = $this->getLayout()->getBlock($blockName);
-            if ($block) {
-                return $block;
-            }
-        }
-        $block = $this->getLayout()->createBlock($this->_defaultToolbarBlock, uniqid(microtime()));
-        $block->setData('_current_limit', 'ALL');
-        return $block;
-    }
+		if ($toolbar->getData('_current_grid_direction') == 'asc') {
+			$collection->setOrder('manufacturer_name', 'ASC');
+		} else if ($toolbar->getData('_current_grid_direction') == 'desc') {
+			$collection->setOrder('manufacturer_name', 'DESC');
+		}
 
-    public function getAvailableOrders()
-    {
-        return ['position' => 'Position', 'brand_name' => 'Name'];
-    }
+		$this->setChild('toolbar', $toolbar);
+		$this->getCollection()->load();
+		if ($this->getCollection()) {
+			$pager = $this->getLayout()->createBlock('Magento\Theme\Block\Html\Pager')->setCollection($this->getCollection());
+			$this->setChild('pager', $pager);
+		}
+		return $this;
+	}
 
-    public function getSortBy()
-    {
-        return 'manufacturer_id';
-    }
+	/**
+	 * Retrieve Toolbar block
+	 *
+	 * @return \Magento\Catalog\Block\Product\ProductList\Toolbar
+	 */
+	public function getToolbarBlock() {
+		$blockName = $this->getToolbarBlockName();
+		if ($blockName) {
+			$block = $this->getLayout()->getBlock($blockName);
+			if ($block) {
+				return $block;
+			}
+		}
+		$block = $this->getLayout()->createBlock($this->_defaultToolbarBlock, uniqid(microtime()));
+		$block->setData('_current_limit', 'ALL');
+		return $block;
+	}
 
-    public function getDefaultDirection()
-    {
-        return 'asc';
-    }
+	public function getAvailableOrders() {
+		return ['position' => 'Position', 'brand_name' => 'Name'];
+	}
+
+	public function getSortBy() {
+		return 'manufacturer_id';
+	}
+
+	public function getDefaultDirection() {
+		return 'asc';
+	}
 
 }
