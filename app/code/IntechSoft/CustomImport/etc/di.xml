@@ -1,4 +1,11 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Magento\UrlRewrite\Model\Storage\DbStorage"
                 type="IntechSoft\CustomImport\Model\UrlRewrite\Storage\DbStorage" />
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="debug_hour_run" xsi:type="object">IntechSoft\CustomImport\Console\Command\DebugHour</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

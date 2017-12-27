@@ -190,10 +190,11 @@ class Import extends AbstractModel
             $dataAfterConfigurable = $this->_importHelper->prepareDataConfigurable($dataBefore);
             $this->_preparedCsvFile = $this->_importCsv;
 	     
-            array_shift($dataAfterConfigurable);
+         //   array_shift($dataAfterConfigurable);
             $dataAfter = array_merge($dataAfter, $dataAfterConfigurable);
 	    
-            $this->csvProcessor->saveData($this->_preparedCsvFile, $dataAfter);
+            //$this->csvProcessor->saveData($this->_preparedCsvFile, $dataAfter);
+            $this->csvProcessor->saveData($this->_preparedCsvFile, $dataAfterConfigurable);
         } else {
             $this->_errorMessage = self::PREPARE_DATA_PROCESS_ERROR ;
             return false;

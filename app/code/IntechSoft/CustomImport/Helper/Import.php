@@ -529,7 +529,7 @@ class Import extends AbstractHelper
                         $preparedItems[] = $this->prepareItem($defaultValue, $this->headers[$i]);
                     } else {
                         if($this->headers[$i] == 'sku'){
-                            $preparedItems[] = $this->prepareItem((int)$item[$i].'-conf', $this->headers[$i]);
+                            $preparedItems[] = $this->prepareItem((int)$item[$i].'conf', $this->headers[$i]);
                         }else{
                             $preparedItems[] = $this->prepareItem($item[$i], $this->headers[$i]);
                         }
