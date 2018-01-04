@@ -89,6 +89,8 @@ class Day
         $importDir = $this->_directoryList->getPath(DirectoryList::VAR_DIR) . '/' . self::CUSTOM_IMPORT_FOLDER ;
         $this->_logger->info('$importDir - '.$importDir);
 
+        $this->_coreRegistry->register('isIntechsoftCustomImportModule', 1);
+
         if(!is_dir($importDir)) {
             mkdir($importDir, 0775);
         }
@@ -97,52 +99,54 @@ class Day
 
         $i = 0;
         foreach ($fileList as $file) {
-            if ($file == '.' || $file == '..'){
+            if ($file == '.' || $file == '..' || $file == 'dump') {
                 continue;
             }
             $i++;
 
+            $this->_coreRegistry->unregister('importSuccessFlag');
             $importedFileName = $importDir . '/' . $file;
-	    //$importedFileName = "/data/web/magento2/var/import/cron/day/bigsync-201711150100078.csv";
-	   // echo "Imported File name ". $importedFileName."\n";
-	    
-	    
-            $this->_logger->info('$importedFileName - '.$importedFileName);
+            $this->_logger->info('$importedFileName - ' . $importedFileName);
             $importModel = $this->_importModel->create();
-	   
             $importModel->setCsvFile($importedFileName, true)->process();
 
-            if (count($importModel->errors) == 0) {
+            $importSuccessFlag = $this->_coreRegistry->registry('importSuccessFlag');
+            if ($importSuccessFlag === 1) {
                 $this->_logger->info(self::SUCCESS_MESSAGE . $file);
-		
-		/*** Moved to import History***/
-		 $src = $importedFileName;
-		    $archiveName = "completed_".date('YmdHis') . "_" . $file;
-		    $dest =$this->_directoryList->getPath(DirectoryList::VAR_DIR)."/import_history/".$archiveName;	    
-		    $r = rename($src, $dest);
-		    if($r){
-			$this->_logger->info('Moved to import history');
-		    }
-		/*** Moved to import History***/ 
-		
-		
-		
-               // unlink($importDir. '/' .$file);
+
+                /*** Moved to import History***/
+                $src = $importedFileName;
+                $archiveName = "completed_" . date('YmdHis') . "_" . $file;
+                $dest = $this->_directoryList->getPath(DirectoryList::VAR_DIR) . "/import_history/" . $archiveName;
+                $r = rename($src, $dest);
+                if ($r) {
+                    $this->_logger->info('Moved to import history');
+                }
+                /*** Moved to import History***/
+
+                //unlink($importDir. '/' .$file);
                 $this->_urlRegenerateHelper->regenerateUrl();
             } else {
                 foreach ($importModel->errors as $error) {
                     if (is_array($error)) {
                         $error = implode(' - ', $error);
                     }
-                    $this->_logger->info( $error);
+                    $this->_logger->info($error);
+                }
+                $src = $importedFileName;
+                $archiveName = "failed_" . date('YmdHis') . "_" . $file;
+                $dest = $this->_directoryList->getPath(DirectoryList::VAR_DIR) . "/failed_import_history/" . $archiveName;
+                if (!is_dir(str_replace($archiveName, "", $dest))) {
+                    mkdir(str_replace($archiveName, "", $dest));
+                }
+                $r = rename($src, $dest);
+                if ($r) {
+                    $this->_logger->info('Moved to failed history');
                 }
             }
 
-            if($i <= 1) {
-                break;
-            }
         }
-        $this->_logger->info('daily cron finished at - ' . $this->_date->gmtDate('Y-m-d H:i:s'));
+        $this->_logger->info('hourly cron finished at - ' . $this->_date->gmtDate('Y-m-d H:i:s'));
 
     }
 }
