@@ -1,6 +1,19 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Magento\UrlRewrite\Model\Storage\DbStorage"
                 type="IntechSoft\CustomImport\Model\UrlRewrite\Storage\DbStorage" />
+    <!--<preference for="Magento\ImportExport\Model\ResourceModel\Import\Data"
+                type="IntechSoft\CustomImport\Model\ResourceModel\Import\Data" />-->
+
+    <type name="Magento\ImportExport\Model\ResourceModel\Import\Data">
+        <plugin name="get_next_bunch_rewrite" type="IntechSoft\CustomImport\Plugin\DataPlugin"/>
+    </type>
+   <!-- <type name="Magento\ImportExport\Model\ResourceModel\Import\Data">
+        <plugin name="get_next_bunch_rewrite_test" type="IntechSoft\CustomImport\Plugin\DataPluginTest" sortOrder="20"/>
+    </type>-->
+    <type name="Magento\CatalogImportExport\Model\Import\Product">
+        <plugin name="check_import_success" type="IntechSoft\CustomImport\Plugin\SaveProductEntityPlugin"/>
+    </type>
+
     <type name="Magento\Framework\Console\CommandList">
         <arguments>
             <argument name="commands" xsi:type="array">

@@ -16,6 +16,7 @@ use IntechSoft\CustomImport\Model\ImportFactory;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Stdlib\DateTime\DateTime;
 use IntechSoft\CustomImport\Helper\UrlRegenerate;
+use Magento\Framework\Registry;
 
 class DebugHour extends Command
 {
@@ -57,6 +58,7 @@ class DebugHour extends Command
      * @var \IntechSoft\CustomImport\Helper\UrlRegenerate
      */
     protected $_urlRegenerateHelper;
+    protected $_coreRegistry;
 
     /**
      * Import constructor.
@@ -73,13 +75,15 @@ class DebugHour extends Command
         ImportFactory $importModel,
         DirectoryList $directoryList,
         DateTime $date,
-        UrlRegenerate $urlRegenerate
+        UrlRegenerate $urlRegenerate,
+        Registry $coreRegistry
     ) {
         $this->_uploader            = $uploader;
         $this->_filesystem          = $filesystem;
         $this->_importModel         = $importModel;
         $this->_directoryList       = $directoryList;
         $this->_date                = $date;
+        $this->_coreRegistry        = $coreRegistry;
         $this->_urlRegenerateHelper = $urlRegenerate;
         //$this->_logger = $logger;
 
@@ -103,6 +107,9 @@ class DebugHour extends Command
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->_coreRegistry->register('isIntechsoftCustomImportModule', 1);
+
+
         ini_set('memory_limit', '2048M');
 
         $this->_logger->info('hourly cron started at - ' . $this->_date->gmtDate('Y-m-d H:i:s'));
@@ -117,25 +124,27 @@ class DebugHour extends Command
 
         $i = 0;
         foreach ($fileList as $file) {
-            if ($file == '.' || $file == '..' || $file == 'dump'){
+            if ($file == '.' || $file == '..' || $file == 'dump') {
                 continue;
             }
             $i++;
 
+            $this->_coreRegistry->unregister('importSuccessFlag');
             $importedFileName = $importDir . '/' . $file;
-            $this->_logger->info('$importedFileName - '.$importedFileName);
+            $this->_logger->info('$importedFileName - ' . $importedFileName);
             $importModel = $this->_importModel->create();
             $importModel->setCsvFile($importedFileName, true)->process();
 
-            if (count($importModel->errors) == 0) {
+            $importSuccessFlag = $this->_coreRegistry->registry('importSuccessFlag');
+            if ($importSuccessFlag === 1) {
                 $this->_logger->info(self::SUCCESS_MESSAGE . $file);
 
                 /*** Moved to import History***/
                 $src = $importedFileName;
-                $archiveName = "completed_".date('YmdHis') . "_" . $file;
-                $dest =$this->_directoryList->getPath(DirectoryList::VAR_DIR)."/import_history/".$archiveName;
+                $archiveName = "completed_" . date('YmdHis') . "_" . $file;
+                $dest = $this->_directoryList->getPath(DirectoryList::VAR_DIR) . "/import_history/" . $archiveName;
                 $r = rename($src, $dest);
-                if($r){
+                if ($r) {
                     $this->_logger->info('Moved to import history');
                 }
                 /*** Moved to import History***/
@@ -147,12 +156,47 @@ class DebugHour extends Command
                     if (is_array($error)) {
                         $error = implode(' - ', $error);
                     }
-                    $this->_logger->info( $error);
+                    $this->_logger->info($error);
+                }
+                $src = $importedFileName;
+                $archiveName = "failed_" . date('YmdHis') . "_" . $file;
+                $dest = $this->_directoryList->getPath(DirectoryList::VAR_DIR) . "/failed_import_history/" . $archiveName;
+                if (!is_dir(str_replace($archiveName, "", $dest))) {
+                    mkdir(str_replace($archiveName, "", $dest));
+                }
+                $r = rename($src, $dest);
+                if ($r) {
+                    $this->_logger->info('Moved to failed history');
                 }
             }
 
-            if($i <= 1) {
-                break;
+
+//            if (count($importModel->errors) == 0) {
+//                $this->_logger->info(self::SUCCESS_MESSAGE . $file);
+//
+//                /*** Moved to import History***/
+//                $src = $importedFileName;
+//                $archiveName = "completed_" . date('YmdHis') . "_" . $file;
+//                $dest = $this->_directoryList->getPath(DirectoryList::VAR_DIR) . "/import_history/" . $archiveName;
+//                $r = rename($src, $dest);
+//                if ($r) {
+//                    $this->_logger->info('Moved to import history');
+//                }
+//                /*** Moved to import History***/
+//
+//                //unlink($importDir. '/' .$file);
+//                $this->_urlRegenerateHelper->regenerateUrl();
+//            } else {
+//                foreach ($importModel->errors as $error) {
+//                    if (is_array($error)) {
+//                        $error = implode(' - ', $error);
+//                    }
+//                    $this->_logger->info($error);
+//                }
+//            }
+
+            if ($i <= 1) {
+                //   break;
             }
         }
         $this->_logger->info('hourly cron finished at - ' . $this->_date->gmtDate('Y-m-d H:i:s'));

@@ -4,6 +4,7 @@
     <module name="IntechSoft_CustomImport" setup_version="1.0.2">
         <sequence>
             <module name="Magento_Catalog"/>
+            <module name="Magento_ImportExport"/>
         </sequence>
     </module>
 </config>

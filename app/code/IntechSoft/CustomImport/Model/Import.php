@@ -91,7 +91,7 @@ class Import extends AbstractModel
      * @param \Magento\Framework\Registry $registry
      * @param \Magento\Framework\File\Csv $csvProcessor
      */
-
+    private static $count = 0;
     public function __construct(
         HelperImport $importHelper,
         Attributes $attributesModel,
@@ -189,16 +189,20 @@ class Import extends AbstractModel
 //			exit;
             $dataAfterConfigurable = $this->_importHelper->prepareDataConfigurable($dataBefore);
             $this->_preparedCsvFile = $this->_importCsv;
-	     
-         //   array_shift($dataAfterConfigurable);
+          /*  if(self::$count > 0) {
+                array_shift($dataAfterConfigurable);
+            }*/
+            self::$count++;
+          //  array_shift($dataAfterConfigurable);
             $dataAfter = array_merge($dataAfter, $dataAfterConfigurable);
 	    
-            //$this->csvProcessor->saveData($this->_preparedCsvFile, $dataAfter);
+        //    $this->csvProcessor->saveData($this->_preparedCsvFile, $dataAfter);
             $this->csvProcessor->saveData($this->_preparedCsvFile, $dataAfterConfigurable);
         } else {
             $this->_errorMessage = self::PREPARE_DATA_PROCESS_ERROR ;
             return false;
         }
+
         return true;
     }
 
@@ -251,7 +255,7 @@ class Import extends AbstractModel
             $data[$importModel::FIELD_FIELD_SEPARATOR]
         );
 
-	
+
         $validationResult = $importModel->validateSource($source);
         $errorAggregator = $importModel->getErrorAggregator();
         $this->successMessages;
@@ -286,7 +290,7 @@ class Import extends AbstractModel
          * Starting Import Process
          */
         if ($importModel->getProcessedRowsCount() && $validationResult && $importModel->isImportAllowed()) {
-			
+
 			//echo "111---";
 			//echo $this->_importHelper->getColumnImdexByName('brand_2');
 			//exit;
