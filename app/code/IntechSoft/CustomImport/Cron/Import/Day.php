@@ -146,7 +146,7 @@ class Day
             }
 
         }
-        $this->_logger->info('hourly cron finished at - ' . $this->_date->gmtDate('Y-m-d H:i:s'));
+        $this->_logger->info('daily cron finished at - ' . $this->_date->gmtDate('Y-m-d H:i:s'));
 
     }
 }
