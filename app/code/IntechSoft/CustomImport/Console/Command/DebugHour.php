@@ -17,6 +17,11 @@ use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Stdlib\DateTime\DateTime;
 use IntechSoft\CustomImport\Helper\UrlRegenerate;
 use Magento\Framework\Registry;
+use Magento\Framework\Mail\Template\TransportBuilder;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Store\Model\ScopeInterface;
+use Magento\Framework\App\Area;
+use Magento\Store\Model\Store;
 
 class DebugHour extends Command
 {
@@ -59,6 +64,8 @@ class DebugHour extends Command
      */
     protected $_urlRegenerateHelper;
     protected $_coreRegistry;
+    protected $_transportBuilder;
+    protected $_scopeConfig;
 
     /**
      * Import constructor.
@@ -76,7 +83,10 @@ class DebugHour extends Command
         DirectoryList $directoryList,
         DateTime $date,
         UrlRegenerate $urlRegenerate,
-        Registry $coreRegistry
+        Registry $coreRegistry,
+        TransportBuilder $transportBuilder,
+        ScopeConfigInterface $scopeConfig
+
     ) {
         $this->_uploader            = $uploader;
         $this->_filesystem          = $filesystem;
@@ -85,6 +95,8 @@ class DebugHour extends Command
         $this->_date                = $date;
         $this->_coreRegistry        = $coreRegistry;
         $this->_urlRegenerateHelper = $urlRegenerate;
+        $this->_transportBuilder    = $transportBuilder;
+        $this->_scopeConfig         = $scopeConfig;
         //$this->_logger = $logger;
 
         $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/hour_cron.log');
@@ -108,7 +120,41 @@ class DebugHour extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $this->_coreRegistry->register('isIntechsoftCustomImportModule', 1);
+       // mail('xxx@example.com', 'My Subject', "message");
+        $templateId = $this->_scopeConfig->getValue("customImportSection/emailGroup/template_id", ScopeInterface::SCOPE_STORE);
+        $senderDataId = $this->_scopeConfig->getValue("customImportSection/emailGroup/sender_data_id", ScopeInterface::SCOPE_STORE);
 
+        $vars = array();
+        $tomail = 'kaplunovskymv@gmail.com';
+        $toname = 'Maks';
+
+        /*if ($templateId && $senderDataId) {
+            $transport = $this->_transportBuilder
+                ->setTemplateIdentifier($templateId)
+                ->setTemplateOptions(['area' => Area::AREA_ADMINHTML, 'store' => Store::DEFAULT_STORE_ID])
+                ->setTemplateVars($vars)
+                ->setFrom($senderDataId)
+                ->addTo($tomail, $toname)
+                ->getTransport();
+            $transport->sendMessage();
+        }*/
+        /*$templateId = $this->getConfig('template');
+        $identity = $this->getConfig('identity');
+        $storeid = 1;
+        $vars = array();
+        $tomail = 'testing@testing.com';
+        $toname = 'testing testing';
+
+        if ($templateId && $identity) {
+            $transport = $this->_transportBuilder
+                ->setTemplateIdentifier($templateId)
+                ->setTemplateOptions(['area' => Area::AREA_FRONTEND, 'store' => $storeid])
+                ->setTemplateVars($vars)
+                ->setFrom($identity)
+                ->addTo($tomail, $toname)
+                ->getTransport();
+            $transport->sendMessage();
+        }*/
 
         ini_set('memory_limit', '2048M');
 
@@ -167,6 +213,21 @@ class DebugHour extends Command
                 $r = rename($src, $dest);
                 if ($r) {
                     $this->_logger->info('Moved to failed history');
+                }
+                $vars = array("failed_origin_name" => $file, "failed_full_name" => $archiveName);
+                $vars = new \Magento\Framework\DataObject($vars);
+                $tomail = 'TJ@gmail.com';
+                $toname = 'TJ';
+
+                if ($templateId && $senderDataId) {
+                    $transport = $this->_transportBuilder
+                        ->setTemplateIdentifier($templateId)
+                        ->setTemplateOptions(['area' => Area::AREA_ADMINHTML, 'store' => Store::DEFAULT_STORE_ID])
+                        ->setTemplateVars($vars->getData())
+                        ->setFrom($senderDataId)
+                        ->addTo($tomail, $toname)
+                        ->getTransport();
+                    $transport->sendMessage();
                 }
             }
 
