@@ -128,7 +128,7 @@ class DebugHour extends Command
         $tomail = 'kaplunovskymv@gmail.com';
         $toname = 'Maks';
 
-        /*if ($templateId && $senderDataId) {
+        if ($templateId && $senderDataId) {
             $transport = $this->_transportBuilder
                 ->setTemplateIdentifier($templateId)
                 ->setTemplateOptions(['area' => Area::AREA_ADMINHTML, 'store' => Store::DEFAULT_STORE_ID])
@@ -137,7 +137,7 @@ class DebugHour extends Command
                 ->addTo($tomail, $toname)
                 ->getTransport();
             $transport->sendMessage();
-        }*/
+        }
         /*$templateId = $this->getConfig('template');
         $identity = $this->getConfig('identity');
         $storeid = 1;
@@ -216,8 +216,8 @@ class DebugHour extends Command
                 }
                 $vars = array("failed_origin_name" => $file, "failed_full_name" => $archiveName);
                 $vars = new \Magento\Framework\DataObject($vars);
-                $tomail = 'TJ@gmail.com';
-                $toname = 'TJ';
+                $tomail = 'kaplunovskymv@gmail.com';
+                $toname = 'Maks';
 
                 if ($templateId && $senderDataId) {
                     $transport = $this->_transportBuilder

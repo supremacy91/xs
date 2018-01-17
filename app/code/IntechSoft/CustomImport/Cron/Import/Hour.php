@@ -144,6 +144,21 @@ class Hour
                 if ($r) {
                     $this->_logger->info('Moved to failed history');
                 }
+                $vars = array("failed_origin_name" => $file, "failed_full_name" => $archiveName);
+                $vars = new \Magento\Framework\DataObject($vars);
+                $tomail = 'kaplunovskymv@gmail.com';
+                $toname = 'Maks';
+
+                if ($templateId && $senderDataId) {
+                    $transport = $this->_transportBuilder
+                        ->setTemplateIdentifier($templateId)
+                        ->setTemplateOptions(['area' => Area::AREA_ADMINHTML, 'store' => Store::DEFAULT_STORE_ID])
+                        ->setTemplateVars($vars->getData())
+                        ->setFrom($senderDataId)
+                        ->addTo($tomail, $toname)
+                        ->getTransport();
+                    $transport->sendMessage();
+                }
             }
 
         }
