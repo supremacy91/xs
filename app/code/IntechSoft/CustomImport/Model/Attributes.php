@@ -186,9 +186,13 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
     {
         $this->setCsvFile($csvFile);
         $this->setCsvFileData();
+
+        // ### Need to understand for what this method!
         $this->setSelectAttributes();
         $this->collectAttributes();
         $this->collectAttributeOptions();
+
+        // ### It seems that new attributes just add here. there is no update functions!
         $this->addNewAttributes();
     }
 
@@ -230,19 +234,18 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
         }
     }
 
-
     /**
      * @param $attributeCode
-     * @param $type - attributeType
-     * create attributes
+     * @param $type
      * @return $this
+     * @throws \Exception
      */
     public function createAttributesAndOptions($attributeCode, $type)
     {
 
         $attribute = $this->createAttribute($attributeCode, $type);
 
-        if ($attribute &&  $attributeCode != 'configurable_variations' && $attributeCode != 'additional_images' && $attributeCode != 'color_hex' && $attributeCode != 'freetext') {
+        if ($attribute && $attributeCode != 'configurable_variations' && $attributeCode != 'additional_images' && $attributeCode != 'color_hex' && $attributeCode != 'freetext') {
             $attributeSet = $this->_attributeSetFactory->create();
             $attributeSet->setEntityTypeId($this->_entityTypeId)->load('Default');
             $productDetailsGroupe = $this->_groupCollectionFactory->create()
@@ -262,7 +265,10 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
 
     /**
      * @param $attributeCode
-     * @return \Magento\Catalog\Model\ResourceModel\Eav\Attribute
+     * @param $type
+     * @return bool
+     * @throws \Exception
+     * @throws \Magento\Framework\Exception\AlreadyExistsException
      */
     protected function createAttribute($attributeCode, $type)
     {
@@ -522,7 +528,7 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
     }
 
     /**
-     * add new attributes
+     * Add new attributes
      */
     protected function addNewAttributes()
     {

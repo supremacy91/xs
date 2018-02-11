@@ -92,6 +92,7 @@ class Import extends AbstractModel
      * @param \Magento\Framework\File\Csv $csvProcessor
      */
     private static $count = 0;
+
     public function __construct(
         HelperImport $importHelper,
         Attributes $attributesModel,
@@ -144,8 +145,11 @@ class Import extends AbstractModel
     }
 
     /**
-     * @param $importSettings
-     * @return array $result
+     * Process the import
+     *
+     * @param array $importSettings
+     * @return array
+     * @throws \Exception
      */
     public function process($importSettings = array())
     {
@@ -166,9 +170,12 @@ class Import extends AbstractModel
         return $result;
     }
 
+
     /**
-     * prepare data for import and save it to new csv file
-     * @return boolean
+     * Prepare data for import and save it to new csv file
+     *
+     * @return bool
+     * @throws \Exception
      */
     protected function prepareData()
     {
@@ -181,23 +188,27 @@ class Import extends AbstractModel
         if (isset($this->importSettings['attribute_set']) && $this->importSettings['attribute_set'] != '') {
             $this->_importHelper->setAttributeSet($this->importSettings['attribute_set']);
         }
+
+        // ### Collect simple product rows.
         if ($dataAfter = $this->_importHelper->prepareData($dataBefore)){
 //			echo "<pre>";
 //			print_r($dataBefore);
 //			echo "\n-----\n";
 //			print_r($dataAfter);
 //			exit;
+
+            // ### Collect configurable product rows.
             $dataAfterConfigurable = $this->_importHelper->prepareDataConfigurable($dataBefore);
             $this->_preparedCsvFile = $this->_importCsv;
           /*  if(self::$count > 0) {
                 array_shift($dataAfterConfigurable);
             }*/
             self::$count++;
-          //  array_shift($dataAfterConfigurable);
+            array_shift($dataAfterConfigurable);
             $dataAfter = array_merge($dataAfter, $dataAfterConfigurable);
-	    
-        //    $this->csvProcessor->saveData($this->_preparedCsvFile, $dataAfter);
-            $this->csvProcessor->saveData($this->_preparedCsvFile, $dataAfterConfigurable);
+
+            // ### Put collected data to file.
+            $this->csvProcessor->saveData($this->_preparedCsvFile, $dataAfter);
         } else {
             $this->_errorMessage = self::PREPARE_DATA_PROCESS_ERROR ;
             return false;
@@ -254,7 +265,6 @@ class Import extends AbstractModel
             $this->objectManager->create('Magento\Framework\Filesystem')->getDirectoryWrite(DirectoryList::ROOT),
             $data[$importModel::FIELD_FIELD_SEPARATOR]
         );
-
 
         $validationResult = $importModel->validateSource($source);
         $errorAggregator = $importModel->getErrorAggregator();
