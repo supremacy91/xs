@@ -245,16 +245,21 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
 
         $attribute = $this->createAttribute($attributeCode, $type);
 
-        if ($attribute && $attributeCode != 'configurable_variations' && $attributeCode != 'additional_images' && $attributeCode != 'color_hex' && $attributeCode != 'freetext') {
+        // Except attribute codes
+        $exceptAttributeCodes = ['configurable_variations', 'additional_images', 'color_hex', 'freetext'];
+
+        if ($attribute && !in_array($attributeCode, $exceptAttributeCodes)) {
             $attributeSet = $this->_attributeSetFactory->create();
             $attributeSet->setEntityTypeId($this->_entityTypeId)->load('Default');
             $productDetailsGroupe = $this->_groupCollectionFactory->create()
                 ->addFieldToFilter('attribute_group_code', $this->attrbuteSettings['attribute_group_code'])
                 ->addFieldToFilter('attribute_set_id', $this->attrbuteSettings['attribute_set_id'])
                 ->getFirstItem();
+
             $attribute->setAttributeSetId($productDetailsGroupe->getAttributeSetId());
             $attribute->setAttributeGroupId($productDetailsGroupe->getAttributeGroupId());
             $attribute->save();
+
             if ($type == 'select') {
                 $this->prepareOptions($attribute);
             }
@@ -492,6 +497,7 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
             }
         }
 
+        // ### Here - collect unique attribute options
         foreach ($collectedOptions as $attributeName => $options) {
             $attributeIndex = $this->getColumnImdexByName($attributeName);
             $this->_collectedAttributes[$attributeIndex] = array($attributeName => array_unique($options));
