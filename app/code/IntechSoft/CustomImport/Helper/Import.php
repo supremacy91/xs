@@ -472,7 +472,7 @@ class Import extends AbstractHelper
             }
 
         } elseif (gettype($path) == 'string' && $path != '') {
-            $path = str_replace(self::IMAGE_URL_TO_CUT, '',$path);
+            $path = str_replace(self::IMAGE_URL_TO_CUT, '', $path);
 
             if (!preg_match("/^[a-zA-Z\d\/\.\_\-\|]*/", $path)) {
                 $path = '';
@@ -487,7 +487,11 @@ class Import extends AbstractHelper
                     if (strlen($image) < 99 && $index == 0) {
                         $newPath .=  $image;
                     } elseif(strlen($image) < 99) {
-                        $newPath .= ',' . $image;
+                        if (empty($newPath)) {
+                            $newPath .= $image;
+                        } else {
+                            $newPath .= ',' . $image;
+                        }
                     }
                 }
 
@@ -495,6 +499,7 @@ class Import extends AbstractHelper
             $path = $newPath;
             $this->itemImage = $images[0];
         }
+
         return $path;
     }
 
