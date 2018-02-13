@@ -7,10 +7,10 @@ use \Magento\Eav\Model\Config;
 
 class Attributes extends \Magento\Catalog\Model\AbstractModel
 {
-
     const ATTRIBUTE_IMAGE_FOLDER = 'attribute/swatch';
 
     protected $attrOptionCollectionFactory;
+
     /**
      * @var \Magento\Eav\Model\Entity\Attribute\SetFactory
      */
@@ -24,7 +24,6 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
     /**
      * @var \Magento\Catalog\Helper\Product
      */
-
     protected $productHelper;
 
     /**
@@ -103,22 +102,32 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
 
     /**
      * Attributes constructor.
-     * @param \Magento\Eav\Model\Entity\Attribute\SetFactory  $attributeSetFactoryr
-     * @param \Magento\Eav\Model\ResourceModel\Entity\Attribute\Group\CollectionFactory $groupCollectionFactory
-     * @param \Magento\Catalog\Model\ResourceModel\Eav\AttributeFactory $attributeFactory
-     * @param \Magento\Catalog\Helper\Product $productHelper
-     * @param \Magento\Eav\Model\AttributeRepository $attributeRepository
-     * @param \Magento\Eav\Api\AttributeOptionManagementInterface $attributeOptionManagement
-     * @param \Magento\Framework\File\Csv $csvProcessor
-     * @param \Magento\Framework\ObjectManagerInterface $objectmanager
-     * @param \Magento\Eav\Api\Data\AttributeOptionLabelInterfaceFactory $optionLabelFactory
-     * @param \Magento\Eav\Api\Data\AttributeOptionInterfaceFactory $optionFactory
-     * @param \Magento\Framework\Registry $registry
-     * @param \Magento\Swatches\Helper\Media $swatchHelper
-     * @param \Magento\Framework\Filesystem $filesystem
-     * @param \IntechSoft\CustomImport\Helper\Import $customImportHelper
+     *
+     * @param \Magento\Eav\Model\ResourceModel\Entity\Attribute\Option\CollectionFactory $attrOptionCollectionFactory
+     * @param \Magento\Eav\Model\Entity\Attribute\SetFactory                             $attributeSetFactory
+     * @param \Magento\Eav\Model\ResourceModel\Entity\Attribute\Group\CollectionFactory  $groupCollectionFactory
+     * @param \Magento\Catalog\Model\ResourceModel\Eav\AttributeFactory                  $attributeFactory
+     * @param \Magento\Catalog\Helper\Product                                            $productHelper
+     * @param \Magento\Eav\Model\AttributeRepository                                     $attributeRepository
+     * @param \Magento\Eav\Api\AttributeOptionManagementInterface                        $attributeOptionManagement
+     * @param \Magento\Framework\File\Csv                                                $csvProcessor
+     * @param \Magento\Framework\ObjectManagerInterface                                  $objectmanager
+     * @param \Magento\Eav\Api\Data\AttributeOptionLabelInterfaceFactory                 $optionLabelFactory
+     * @param \Magento\Eav\Api\Data\AttributeOptionInterfaceFactory                      $optionFactory
+     * @param \Magento\Framework\Registry                                                $registry
+     * @param \Magento\Swatches\Helper\Media                                             $swatchHelper
+     * @param \Magento\Framework\Filesystem                                              $filesystem
+     * @param \IntechSoft\CustomImport\Helper\Import                                     $customImportHelper
+     * @param Attribute\Uninstall                                                        $attributeUninstaller
+     * @param \Biztech\Manufacturer\Model\Config                                         $config
+     * @param \Biztech\Manufacturer\Model\Manufacturer                                   $manufacturer
+     * @param \Biztech\Manufacturer\Model\Manufacturertext                               $manufacturertext
+     * @param \Biztech\Manufacturer\Helper\Data                                          $helperData
+     * @param \Magento\UrlRewrite\Model\UrlRewrite                                       $urlRewrite
+     * @param \Magento\UrlRewrite\Service\V1\Data\UrlRewriteFactory                      $urlRewriteFactory
+     * @param \Magento\UrlRewrite\Model\UrlPersistInterface                              $urlPersist
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
-
     public function __construct(
         \Magento\Eav\Model\ResourceModel\Entity\Attribute\Option\CollectionFactory $attrOptionCollectionFactory,
         \Magento\Eav\Model\Entity\Attribute\SetFactory  $attributeSetFactory,
@@ -157,12 +166,15 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
         $this->csvProcessor = $csvProcessor;
         $this->optionLabelFactory = $optionLabelFactory;
         $this->optionFactory = $optionFactory;
+        // TODO: should be declare field, not automatic declaration
         $this->objectManager = $objectmanager;
         $this->_registry = $registry;
         $this->_swatchHelper = $swatchHelper;
         $this->mediaDirectory = $filesystem->getDirectoryWrite(DirectoryList::MEDIA);
         $this->customImportHelper = $customImportHelper;
         $this->_attributeUninstaller = $attributeUninstaller;
+
+        // TODO: Need to refactor it. Should be created fields, it should not be declared automatically
 		/*Custom code to add brand in biztech module*/
 		$this->_storeConfig = $config;
         $this->_manufacturerModel = $manufacturer;
@@ -172,6 +184,7 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
         $this->_urlRewriteFactory = $urlRewriteFactory;
         $this->_urlPersist = $urlPersist;
 		/*Custom code to add brand in biztech module*/
+
         $this->_entityTypeId = $this->objectManager->create(
             'Magento\Eav\Model\Entity'
         )->setType(
@@ -205,6 +218,9 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
         $this->csvFile = $csvFile;
     }
 
+    /**
+     * @param $settings
+     */
     public function setAttributeSettings($settings)
     {
         if (is_array($settings) && count($settings) > 0) {
@@ -384,9 +400,16 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
             ->setRedirectType($redirectType);
     }
 
+
     /**
-     * prepare options for attributes
+     * Prepare options for attributes
+     *
      * @param $attribute
+     * @throws \Exception
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Magento\Framework\Exception\StateException
      */
     public function prepareOptions($attribute)
     {		
@@ -429,6 +452,7 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
 						print_r($newOptions);
 						exit;
 					}
+
 					/*Custom code to add brand in biztech module*/
 					if($attribute->getattributeCode() == 'brand') {
 						$data = array();
