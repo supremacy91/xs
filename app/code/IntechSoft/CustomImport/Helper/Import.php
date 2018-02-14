@@ -401,6 +401,7 @@ class Import extends AbstractHelper
         $categoryArray = explode('/', $defaultCategoryPath);
         $defaultCategory = end($categoryArray);
         $defaultCategory = trim($defaultCategory);
+
         return $defaultCategory;
     }
 

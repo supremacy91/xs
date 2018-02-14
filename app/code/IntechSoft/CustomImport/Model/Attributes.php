@@ -9,6 +9,9 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
 {
     const ATTRIBUTE_IMAGE_FOLDER = 'attribute/swatch';
 
+    /**
+     * @var \Magento\Eav\Model\ResourceModel\Entity\Attribute\Option\CollectionFactory
+     */
     protected $attrOptionCollectionFactory;
 
     /**
@@ -80,12 +83,29 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
      */
     protected $_attributeUninstaller;
 
-    protected $_collectedAttributes = array();
+    /**
+     * @var array
+     */
+    protected $_collectedAttributes = [];
 
-    protected $csvFileData = array();
+    /**
+     * @var array
+     */
+    protected $csvFileData = [];
 
-    protected $_selectAttributes = array('color', 'size', 'brand', 'brand_2');
+    /**
+     * @var array
+     */
+    protected $_selectAttributes = ['color', 'size', 'brand', 'brand_2'];
 
+    /**
+     * @var array
+     */
+    protected $_exceptAttributeCodes = ['configurable_variations', 'additional_images', 'color_hex', 'freetext'];
+
+    /**
+     * @var bool
+     */
     public $allowToContinueImport = true;
 
     /**
@@ -262,7 +282,7 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
         $attribute = $this->createAttribute($attributeCode, $type);
 
         // Except attribute codes
-        $exceptAttributeCodes = ['configurable_variations', 'additional_images', 'color_hex', 'freetext'];
+        $exceptAttributeCodes = $this->_exceptAttributeCodes;
 
         if ($attribute && !in_array($attributeCode, $exceptAttributeCodes)) {
             $attributeSet = $this->_attributeSetFactory->create();
@@ -421,7 +441,7 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
 
 
             foreach ($newOptions as $optionName) {
-				if($attribute->getattributeCode() == 'brand') {
+				if($attributeCode == 'brand') {
 					$proceed = false;
 					$collection = $this->_manufacturerModel->getCollection()
 						->addFieldToFilter('manufacturer_name', $optionName)->getData();
