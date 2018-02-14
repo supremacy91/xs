@@ -334,7 +334,9 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
                 $swatchInputType = 'swatch_text';
             }
         }
-        if (is_null($attribute->getId()) && $attributeCode != 'qty' && $attributeCode != 'additional_images') {
+
+        $skipAttributeCode = array_merge(['qty', 'additional_images'], $this->_exceptAttributeCodes);
+        if (is_null($attribute->getId()) && !in_array($attributeCode, $skipAttributeCode)) {
             $attribute->addData([
                 'entity_type_id'    => $this->_entityTypeId,
                 'attribute_code'    => $attributeCode,
