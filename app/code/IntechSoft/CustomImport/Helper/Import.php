@@ -113,7 +113,14 @@ class Import extends AbstractHelper
         return $data;
     }
 
-
+    /**
+     *
+     *Method merges 2 arrays:
+     * 1) the mapped names of attributes from csv
+     * 2) names of standart attributes of Magento
+     * @param $headers
+     * @return array
+     */
     public function getCsvHeaders($headers)
     {
         $preparedHeaders = array();
@@ -151,7 +158,7 @@ class Import extends AbstractHelper
                     $preparedItems[] = $this->prepareItem($defaultValue, $this->headers[$i]);
                 } else {
                     if($this->headers[$i] == 'sku') {
-                        $preparedItems[] = $this->prepareItem((int)$item[$i], $this->headers[$i]);
+                        $preparedItems[] = $this->prepareItem($item[$i], $this->headers[$i]);
                     } else {
                         $preparedItems[] = @$this->prepareItem($item[$i], $this->headers[$i]);
                     }
@@ -534,7 +541,7 @@ class Import extends AbstractHelper
                         $preparedItems[] = $this->prepareItem($defaultValue, $this->headers[$i]);
                     } else {
                         if($this->headers[$i] == 'sku'){
-                            $preparedItems[] = $this->prepareItem((int)$item[$i].'conf', $this->headers[$i]);
+                            $preparedItems[] = $this->prepareItem($item[$groupKey], $this->headers[$i]);
                         }else{
                             $preparedItems[] = $this->prepareItem($item[$i], $this->headers[$i]);
                         }
@@ -544,12 +551,12 @@ class Import extends AbstractHelper
                     $convertedData[$counter][$variaionsKey] = $configurableVariation;
                 }
                 $configurableVariation = '';
-                $configurableVariation .= 'sku='.(int)$this->prepareItem($item[$skuKey]) . ',color='.$this->prepareItem($item[$colorKey]) . ',size='.$this->prepareItem($item[$sizeKey]);
+                $configurableVariation .= 'sku='.(string)$this->prepareItem($item[$skuKey]) . ',color='.$this->prepareItem($item[$colorKey]) . ',size='.$this->prepareItem($item[$sizeKey]);
                 $group = $item[$groupKey];
                 $convertedData[] = $preparedItems;
                 $counter++;
             }else{
-                $configurableVariation .= '|sku='.(int)$this->prepareItem($item[$skuKey]) . ',color='.$this->prepareItem($item[$colorKey]) . ',size='.$this->prepareItem($item[$sizeKey]);
+                $configurableVariation .= '|sku='.(string)$this->prepareItem($item[$skuKey]) . ',color='.$this->prepareItem($item[$colorKey]) . ',size='.$this->prepareItem($item[$sizeKey]);
             }
             if($countElements == $index && $configurableVariation){
                 $convertedData[$counter][$variaionsKey] = $configurableVariation;

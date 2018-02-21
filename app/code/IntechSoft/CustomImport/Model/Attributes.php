@@ -435,6 +435,7 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
 				}
 				if($proceed) {
 					$optionLabel = $this->optionLabelFactory->create();
+                    //$optionLabel = $this->optionFactory->create();
 					$optionLabel->setStoreId(0);
 					$optionLabel->setLabel($optionName);
 					//$optionLabel->setDefault($optionName);
@@ -444,6 +445,9 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
 					$option->setStoreLabels([$optionLabel]);
 					$option->setSortOrder(0);
 					$option->setIsDefault(false);
+
+                    //$attribute->addData(array('option' => $option));
+                    //$attribute->save();
 
 					if (!$this->_attributeOptionManagement->add('catalog_product', $attributeCode, $option)) {
 						$this->allowToContinueImport;
