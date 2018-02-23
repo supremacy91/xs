@@ -358,7 +358,7 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
         }
 
         if ($type == 'select') {
-            $this->prepareOptions($attribute);
+            $this->customPrepareOptions($attribute);
         }
 
         return false;
@@ -433,6 +433,58 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @throws \Magento\Framework\Exception\StateException
      */
+
+    public function customPrepareOptions($attribute) {
+            if ($newOptions = $this->getNewOptions($attribute)){
+                $attributeName = $attribute;
+                $attribute = $this->_attributeRepository->get('catalog_product', $attributeName);
+                $attributeId = $attribute->getAttributeId();
+                $attributeCode = $attribute->getAttributeCode();
+
+
+                foreach ($newOptions as $optionName) {
+                   /* $optionLabel = $this->optionLabelFactory->create();
+                    $optionLabel->setStoreId(0);
+                    $optionLabel->setLabel($optionName);
+                    //$optionLabel->setDefault($optionName);
+    
+                    $option = $this->optionFactory->create();
+                    $option->setLabel($optionLabel);
+                    $option->setStoreLabels([$optionLabel]);
+                    $option->setSortOrder(0);
+                    $option->setIsDefault(false);*/
+    
+                   /* $option=array();
+                    $option['attribute_id'] = $attributeId;
+                    foreach($newOptions as $key=>$value){
+                        $option['value'][$value][0]=$value;
+
+                    }*/
+
+                    $attribute_arr = ["JRTest", "5JRTest1"];
+                    /*$attributeInfo=$this->_attributeFactory->getCollection()
+                        ->addFieldToFilter('attribute_code',['eq'=>"size"])
+                        ->getFirstItem();
+                    $attribute_id = $attributeInfo->getAttributeId();*/
+                    $option=array();
+                    $option['attribute_id'] = $attributeId;
+                    foreach($attribute_arr as $key=>$value){
+                        $option['value'][$value][0]=$value;
+                    }
+
+                    $eavSetup = $this->objectManager->create('\Magento\Eav\Setup\EavSetup');
+                    $eavSetup->addAttributeOption($option);
+                    
+    
+              
+                }
+
+           
+            }
+    }
+
+
+
     public function prepareOptions($attribute)
     {		
         if ($newOptions = $this->getNewOptions($attribute)){
