@@ -158,7 +158,7 @@ class Import extends AbstractHelper
                     $preparedItems[] = $this->prepareItem($defaultValue, $this->headers[$i]);
                 } else {
                     if($this->headers[$i] == 'sku') {
-                        $preparedItems[] = $this->prepareItem($item[$i], $this->headers[$i]);
+                        $preparedItems[] = 'c' . $this->prepareItem($item[$i], $this->headers[$i]);
                     } else {
                         $preparedItems[] = @$this->prepareItem($item[$i], $this->headers[$i]);
                     }
@@ -552,12 +552,12 @@ class Import extends AbstractHelper
                     $convertedData[$counter][$variaionsKey] = $configurableVariation;
                 }
                 $configurableVariation = '';
-                $configurableVariation .= 'sku='.(string)$this->prepareItem($item[$skuKey]) . ',color='.$this->prepareItem($item[$colorKey]) . ',size='.$this->prepareItem($item[$sizeKey]);
+                $configurableVariation .= 'sku='. 'c' . (string)$this->prepareItem($item[$skuKey]) . ',color='.$this->prepareItem($item[$colorKey]) . ',size='.$this->prepareItem($item[$sizeKey]);
                 $group = $item[$groupKey];
                 $convertedData[] = $preparedItems;
                 $counter++;
             }else{
-                $configurableVariation .= '|sku='.(string)$this->prepareItem($item[$skuKey]) . ',color='.$this->prepareItem($item[$colorKey]) . ',size='.$this->prepareItem($item[$sizeKey]);
+                $configurableVariation .= '|sku='. 'c' . (string)$this->prepareItem($item[$skuKey]) . ',color='.$this->prepareItem($item[$colorKey]) . ',size='.$this->prepareItem($item[$sizeKey]);
             }
             if($countElements == $index && $configurableVariation){
                 $convertedData[$counter][$variaionsKey] = $configurableVariation;

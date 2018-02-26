@@ -358,7 +358,7 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
         }
 
         if ($type == 'select') {
-            $this->customPrepareOptions($attribute);
+            $this->prepareOptions($attribute);
         }
 
         return false;
@@ -442,18 +442,18 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
                 $attributeCode = $attribute->getAttributeCode();
 
 
-                foreach ($newOptions as $optionName) {
+              //  foreach ($newOptions as $optionName) {
                    /* $optionLabel = $this->optionLabelFactory->create();
                     $optionLabel->setStoreId(0);
                     $optionLabel->setLabel($optionName);
                     //$optionLabel->setDefault($optionName);
-    
+
                     $option = $this->optionFactory->create();
                     $option->setLabel($optionLabel);
                     $option->setStoreLabels([$optionLabel]);
                     $option->setSortOrder(0);
                     $option->setIsDefault(false);*/
-    
+
                    /* $option=array();
                     $option['attribute_id'] = $attributeId;
                     foreach($newOptions as $key=>$value){
@@ -461,16 +461,16 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
 
                     }*/
 
-                    $attribute_arr = ["JRTest", "5JRTest1"];
+                   // $attribute_arr = ["JRTest", "5JRTest1"];
                     /*$attributeInfo=$this->_attributeFactory->getCollection()
                         ->addFieldToFilter('attribute_code',['eq'=>"size"])
                         ->getFirstItem();
                     $attribute_id = $attributeInfo->getAttributeId();*/
                     $option=array();
                     $option['attribute_id'] = $attributeId;
-                    foreach($attribute_arr as $key=>$value){
+                    foreach($newOptions as $key=>$value){
                         $option['value'][$value][0]=$value;
-                    }
+                  //  }
 
                     $eavSetup = $this->objectManager->create('\Magento\Eav\Setup\EavSetup');
                     $eavSetup->addAttributeOption($option);
@@ -483,9 +483,83 @@ class Attributes extends \Magento\Catalog\Model\AbstractModel
             }
     }
 
-
-
     public function prepareOptions($attribute)
+    {
+        if ($newOptions = $this->getNewOptions($attribute)){
+            $attributeName = $attribute;
+            $attribute = $this->_attributeRepository->get('catalog_product', $attributeName);
+            $attributeId = $attribute->getAttributeId();
+            $attributeCode = $attribute->getAttributeCode();
+
+            $option=array();
+            $option['attribute_id'] = $attributeId;
+            foreach($newOptions as $key=>$value){
+                $option['value'][$value][0]=$value;
+            }
+
+                $eavSetup = $this->objectManager->create('\Magento\Eav\Setup\EavSetup');
+                $eavSetup->addAttributeOption($option);
+
+            foreach ($newOptions as $optionName) {
+                if($attributeCode == 'brand') {
+                    $proceed = false;
+                    $collection = $this->_manufacturerModel->getCollection()
+                        ->addFieldToFilter('manufacturer_name', $optionName)->getData();
+                    if (count($collection) > 0) {
+                        $proceed = false;
+                    } else {
+                        $proceed = true;
+                    }
+                } else {
+                    $proceed = true;
+                }
+                if($proceed) {
+
+                  
+                    if($attribute->getattributeCode() == 'color_hex') {
+                        print_r($newOptions);
+                        exit;
+                    }
+
+                    /*Custom code to add brand in biztech module*/
+                    if($attribute->getattributeCode() == 'brand') {
+                        $data = array();
+                        $data['manufacturer_name'] = $optionName;
+                        $data['brand_name'] = $optionName;
+                        $data['url_key'] = $this->_helperData->clearUrlKey($optionName);
+                        $model = $this->_manufacturerModel->setData($data)->save();
+                        if ($model->getManufacturerId()) {
+                            if ($this->updateUrlKey($model) == null) {
+                                return;
+                            }
+                        }
+                        $model->save();
+                        $collection_text = $this->_manufacturertextModel
+                            ->getCollection()
+                            ->addFieldToFilter('manufacturer_id', $model->getManufacturerId());
+
+                        $this->_manufacturertextModel->setData($data)
+                            ->setManufacturerId($model->getManufacturerId())->setStoreId(0)->setStatus(1);
+                        $this->_manufacturertextModel->save();
+                        foreach ($this->_storeConfig->getStoreManager()->getStores() as $store) {
+                            $this->_manufacturertextModel->setData($data)
+                                ->setManufacturerId($model->getManufacturerId())
+                                ->setStoreId($store->getId())
+                                ->setStatus(1);
+
+                            $this->_manufacturertextModel->save();
+                        }
+                        $this->_manufacturerModel->save();
+                        $this->_manufacturertextModel->save();
+                    }
+                    /*Custom code to add brand in biztech module*/
+                }
+            }
+        }
+    }
+
+
+    public function prepareOptions1($attribute)
     {		
         if ($newOptions = $this->getNewOptions($attribute)){
             $attributeName = $attribute;

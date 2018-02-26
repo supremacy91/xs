@@ -124,7 +124,7 @@ class DebugHour extends Command
         $templateId = $this->_scopeConfig->getValue("customImportSection/emailGroup/template_id", ScopeInterface::SCOPE_STORE);
         $senderDataId = $this->_scopeConfig->getValue("customImportSection/emailGroup/sender_data_id", ScopeInterface::SCOPE_STORE);
 
-        $vars = array();
+       /* $vars = array();
         $tomail = 'kaplunovskymv@gmail.com';
         $toname = 'Maks';
 
@@ -137,7 +137,7 @@ class DebugHour extends Command
                 ->addTo($tomail, $toname)
                 ->getTransport();
             $transport->sendMessage();
-        }
+        }*/
         /*$templateId = $this->getConfig('template');
         $identity = $this->getConfig('identity');
         $storeid = 1;
@@ -227,7 +227,7 @@ class DebugHour extends Command
                         ->setFrom($senderDataId)
                         ->addTo($tomail, $toname)
                         ->getTransport();
-                    $transport->sendMessage();
+                   // $transport->sendMessage();
                 }
             }
 
@@ -257,7 +257,7 @@ class DebugHour extends Command
 //            }
 
             if ($i <= 1) {
-                //   break;
+                //  break;
             }
         }
         $this->_logger->info('hourly cron finished at - ' . $this->_date->gmtDate('Y-m-d H:i:s'));
